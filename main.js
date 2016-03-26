@@ -10493,10 +10493,11 @@ Elm.Roman.make = function (_elm) {
    $String = Elm.String.make(_elm);
    var _op = {};
    var name = function (roman) {
+      var agnomen$ = A2($Maybe.withDefault,"",roman.agnomen);
       var cognomen$ = A2($Maybe.withDefault,"",roman.cognomen);
-      return A2($String.join," ",_U.list([roman.praenomen,roman.nomen,cognomen$]));
+      return A2($String.join," ",_U.list([roman.praenomen,roman.nomen,cognomen$,agnomen$]));
    };
-   var Roman = F3(function (a,b,c) {    return {praenomen: a,nomen: b,cognomen: c};});
+   var Roman = F4(function (a,b,c,d) {    return {praenomen: a,nomen: b,cognomen: c,agnomen: d};});
    return _elm.Roman.values = {_op: _op,Roman: Roman,name: name};
 };
 Elm.Random = Elm.Random || {};
@@ -10518,11 +10519,29 @@ Elm.Random.Roman.make = function (_elm) {
    $Roman = Elm.Roman.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var agnomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Pius",_U.list(["Pius","Felix","Africanus"])));
+   var agnomenFromCognomen = function (cognomen) {
+      var _p0 = cognomen;
+      if (_p0.ctor === "Just") {
+            return agnomen;
+         } else {
+            return $Random$Extra.constant($Maybe.Nothing);
+         }
+   };
    var cognomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Metellus",_U.list(["Metellus","Caesar","Brutus"])));
    var nomen = A2($Random$Extra.selectWithDefault,"Julius",_U.list(["Julius","Fabius","Junius"]));
    var praenomen = A2($Random$Extra.selectWithDefault,"Marcus",_U.list(["Marcus","Quintus","Gaius"]));
-   var roman = A4($Random.map3,$Roman.Roman,praenomen,nomen,cognomen);
-   return _elm.Random.Roman.values = {_op: _op,roman: roman,praenomen: praenomen,nomen: nomen,cognomen: cognomen};
+   var roman = function () {
+      var agnomen$ = A2($Random.andThen,cognomen,agnomenFromCognomen);
+      return A5($Random.map4,$Roman.Roman,praenomen,nomen,cognomen,agnomen$);
+   }();
+   return _elm.Random.Roman.values = {_op: _op
+                                     ,roman: roman
+                                     ,praenomen: praenomen
+                                     ,nomen: nomen
+                                     ,cognomen: cognomen
+                                     ,agnomen: agnomen
+                                     ,agnomenFromCognomen: agnomenFromCognomen};
 };
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
