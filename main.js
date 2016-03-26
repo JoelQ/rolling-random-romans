@@ -10520,28 +10520,23 @@ Elm.Random.Roman.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var agnomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Pius",_U.list(["Pius","Felix","Africanus"])));
-   var agnomenFromCognomen = function (cognomen) {
+   var nickNames = function (cognomen) {
       var _p0 = cognomen;
       if (_p0.ctor === "Just") {
-            return agnomen;
+            return A2($Random.map,function (agnomen$) {    return {ctor: "_Tuple2",_0: cognomen,_1: agnomen$};},agnomen);
          } else {
-            return $Random$Extra.constant($Maybe.Nothing);
+            return $Random$Extra.constant({ctor: "_Tuple2",_0: $Maybe.Nothing,_1: $Maybe.Nothing});
          }
    };
    var cognomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Metellus",_U.list(["Metellus","Caesar","Brutus"])));
    var nomen = A2($Random$Extra.selectWithDefault,"Julius",_U.list(["Julius","Fabius","Junius"]));
    var praenomen = A2($Random$Extra.selectWithDefault,"Marcus",_U.list(["Marcus","Quintus","Gaius"]));
    var roman = function () {
-      var agnomen$ = A2($Random.andThen,cognomen,agnomenFromCognomen);
-      return A5($Random.map4,$Roman.Roman,praenomen,nomen,cognomen,agnomen$);
+      var roman$ = F3(function (pn,n,_p1) {    var _p2 = _p1;return A4($Roman.Roman,pn,n,_p2._0,_p2._1);});
+      var nickNames$ = A2($Random.andThen,cognomen,nickNames);
+      return A4($Random.map3,roman$,praenomen,nomen,nickNames$);
    }();
-   return _elm.Random.Roman.values = {_op: _op
-                                     ,roman: roman
-                                     ,praenomen: praenomen
-                                     ,nomen: nomen
-                                     ,cognomen: cognomen
-                                     ,agnomen: agnomen
-                                     ,agnomenFromCognomen: agnomenFromCognomen};
+   return _elm.Random.Roman.values = {_op: _op,roman: roman,praenomen: praenomen,nomen: nomen,cognomen: cognomen,agnomen: agnomen,nickNames: nickNames};
 };
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {

@@ -7,9 +7,10 @@ import Roman exposing (Roman)
 
 roman : Generator Roman
 roman =
-  let agnomen' = cognomen `andThen` agnomenFromCognomen
+  let nickNames' = cognomen `andThen` nickNames
+      roman' pn n (cn, an) = Roman pn n cn an
   in
-     Random.map4 Roman praenomen nomen cognomen agnomen'
+     Random.map3 roman' praenomen nomen nickNames'
 
 praenomen : Generator String
 praenomen =
@@ -29,8 +30,8 @@ agnomen =
   RandomE.selectWithDefault "Pius" ["Pius", "Felix", "Africanus"]
     |> RandomM.maybe
 
-agnomenFromCognomen : Maybe String -> Generator (Maybe String)
-agnomenFromCognomen cognomen =
+nickNames : Maybe String -> Generator (Maybe String, Maybe String)
+nickNames cognomen =
   case cognomen of
-    Just _ -> agnomen
-    Nothing -> RandomE.constant Nothing
+    Just _ -> Random.map (\agnomen' -> (cognomen, agnomen')) agnomen
+    Nothing -> RandomE.constant (Nothing, Nothing)
