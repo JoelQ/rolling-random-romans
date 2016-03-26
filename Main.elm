@@ -6,7 +6,9 @@ import Roman exposing(Roman)
 
 randomRoman : Roman
 randomRoman =
-  Random.generate RandomR.roman (Random.initialSeed 1234) |> fst
+  Random.generate RandomR.roman (Random.initialSeed jsSeed) |> fst
+
+port jsSeed : Int
 
 main : Html
 main =
