@@ -10527,7 +10527,7 @@ Elm.Roman.make = function (_elm) {
       return A2($String.join," ",_U.list([roman.praenomen,nomen$,cognomen$,agnomen$]));
    };
    var Roman = F4(function (a,b,c,d) {    return {praenomen: a,family: b,cognomen: c,agnomen: d};});
-   var Family = F3(function (a,b,c) {    return {socialStatus: a,nomen: b,cognomina: c};});
+   var Family = F4(function (a,b,c,d) {    return {socialStatus: a,nomen: b,cognomina: c,favoredPraenomen: d};});
    var Plebian = {ctor: "Plebian"};
    var Patrician = {ctor: "Patrician"};
    return _elm.Roman.values = {_op: _op,Patrician: Patrician,Plebian: Plebian,Family: Family,Roman: Roman,name: name};
@@ -10552,16 +10552,16 @@ Elm.Random.Roman.make = function (_elm) {
    $Roman = Elm.Roman.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var defaultPlebianFamily = A3($Roman.Family,$Roman.Plebian,"Octavius",_U.list(["Rufus"]));
-   var plebianFamilies = _U.list([A3($Roman.Family,$Roman.Plebian,"Octavius",_U.list(["Rufus"]))
-                                 ,A3($Roman.Family,$Roman.Plebian,"Marius",_U.list([]))
-                                 ,A3($Roman.Family,$Roman.Plebian,"Livius",_U.list(["Drusus"]))
-                                 ,A3($Roman.Family,$Roman.Plebian,"Domitius",_U.list(["Calvinus","Ahenobarbus"]))]);
-   var defaultPatricianFamily = A3($Roman.Family,$Roman.Patrician,"Julius",_U.list(["Caesar","Iulus"]));
-   var patricianFamilies = _U.list([A3($Roman.Family,$Roman.Patrician,"Julius",_U.list(["Caesar","Iulus"]))
-                                   ,A3($Roman.Family,$Roman.Patrician,"Fabius",_U.list(["Maximus","Licinus"]))
-                                   ,A3($Roman.Family,$Roman.Patrician,"Junius",_U.list(["Brutus","Silanus"]))
-                                   ,A3($Roman.Family,$Roman.Patrician,"Aemelius",_U.list(["Paulus","Lepidus"]))]);
+   var defaultPlebianFamily = A4($Roman.Family,$Roman.Plebian,"Octavius",_U.list(["Rufus"]),_U.list([]));
+   var plebianFamilies = _U.list([A4($Roman.Family,$Roman.Plebian,"Octavius",_U.list(["Rufus"]),_U.list(["Gnaeus","Gaius","Marcus"]))
+                                 ,A4($Roman.Family,$Roman.Plebian,"Marius",_U.list([]),_U.list(["Gaius","Lucius","Sextus"]))
+                                 ,A4($Roman.Family,$Roman.Plebian,"Livius",_U.list(["Drusus"]),_U.list(["Gaius","Lucius","Titus"]))
+                                 ,A4($Roman.Family,$Roman.Plebian,"Domitius",_U.list(["Calvinus","Ahenobarbus"]),_U.list(["Gnaeus","Marcus","Lucius"]))]);
+   var defaultPatricianFamily = A4($Roman.Family,$Roman.Patrician,"Julius",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]));
+   var patricianFamilies = _U.list([A4($Roman.Family,$Roman.Patrician,"Julius",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]))
+                                   ,A4($Roman.Family,$Roman.Patrician,"Fabius",_U.list(["Maximus","Licinus"]),_U.list(["Caeso","Quintus","Marcus"]))
+                                   ,A4($Roman.Family,$Roman.Patrician,"Junius",_U.list(["Brutus","Silanus"]),_U.list(["Marcus","Decimus","Lucius"]))
+                                   ,A4($Roman.Family,$Roman.Patrician,"Aemelius",_U.list(["Paulus","Lepidus"]),_U.list(["Lucius","Marcus","Quintus"]))]);
    var plebian = A2($Random$Extra.selectWithDefault,defaultPlebianFamily,plebianFamilies);
    var patrician = A2($Random$Extra.selectWithDefault,defaultPatricianFamily,patricianFamilies);
    var family = function (status) {    var _p0 = status;if (_p0.ctor === "Patrician") {    return patrician;} else {    return plebian;}};
@@ -10588,22 +10588,41 @@ Elm.Random.Roman.make = function (_elm) {
       var cognomen$ = $Random$Extra.select(family.cognomina);
       return A2($Random.andThen,cognomen$,replaceNothingWithGeneric);
    };
-   var names = function (family) {
-      var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames);
-      return A2($Random.map,function (_p3) {    var _p4 = _p3;return {ctor: "_Tuple3",_0: family,_1: _p4._0,_2: _p4._1};},nickNames$);
+   var genericPraenomen = A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"]));
+   var favoredPraenomen = function (family) {
+      var defaultGeneric = function (praenomen) {
+         var _p3 = praenomen;
+         if (_p3.ctor === "Just") {
+               return $Random$Extra.constant(_p3._0);
+            } else {
+               return genericPraenomen;
+            }
+      };
+      var favored = $Random$Extra.select(family.favoredPraenomen);
+      return A2($Random.andThen,favored,defaultGeneric);
    };
-   var praenomen = A2($Random$Extra.selectWithDefault,"Marcus",_U.list(["Marcus","Quintus","Gaius"]));
-   var roman = function () {
-      var roman$ = F2(function (pn,_p5) {    var _p6 = _p5;return A4($Roman.Roman,pn,_p6._0,_p6._1,_p6._2);});
-      var family$ = A2($Random.andThen,socialStatus,family);
-      var names$ = A2($Random.andThen,family$,names);
-      return A3($Random.map2,roman$,praenomen,names$);
-   }();
+   var familyPraenomen = function (family) {
+      var favoredPraenomen$ = favoredPraenomen(family);
+      return A3($Random$Extra.flatMap2,$Random$Odds.rollOdds(80),favoredPraenomen$,genericPraenomen);
+   };
+   var names = function (family) {
+      var praenomen$ = familyPraenomen(family);
+      var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames);
+      return A3($Random.map2,F2(function (pn,_p4) {    var _p5 = _p4;return {ctor: "_Tuple4",_0: pn,_1: family,_2: _p5._0,_3: _p5._1};}),praenomen$,nickNames$);
+   };
+   var roman = A2($Random.map,
+   function (_p6) {
+      var _p7 = _p6;
+      return A4($Roman.Roman,_p7._0,_p7._1,_p7._2,_p7._3);
+   },
+   A2($Random.andThen,A2($Random.andThen,socialStatus,family),names));
    return _elm.Random.Roman.values = {_op: _op
                                      ,roman: roman
-                                     ,praenomen: praenomen
+                                     ,genericPraenomen: genericPraenomen
                                      ,genericCognomen: genericCognomen
                                      ,familyCognomen: familyCognomen
+                                     ,favoredPraenomen: favoredPraenomen
+                                     ,familyPraenomen: familyPraenomen
                                      ,agnomen: agnomen
                                      ,nickNames: nickNames
                                      ,names: names

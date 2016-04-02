@@ -9,15 +9,14 @@ import Roman exposing (Roman, Family, SocialStatus(..))
 
 roman : Generator Roman
 roman =
-  let family' = socialStatus `andThen` family
-      names' = family' `andThen` names
-      roman' pn (f, cn, an) = Roman pn f cn an
-  in
-     Random.map2 roman' praenomen names'
+  socialStatus
+  `andThen` family
+  `andThen` names
+    |> Random.map (\(pn, f, cn, an) -> Roman pn f cn an)
 
-praenomen : Generator String
-praenomen =
-  RandomE.selectWithDefault "Marcus" ["Marcus", "Quintus", "Gaius"]
+genericPraenomen : Generator String
+genericPraenomen =
+  RandomE.selectWithDefault "Publius" ["Publius", "Appius", "Tiberius"]
 
 genericCognomen : Generator (Maybe String)
 genericCognomen =
@@ -34,6 +33,22 @@ familyCognomen family =
   in
      cognomen' `andThen` replaceNothingWithGeneric
 
+favoredPraenomen : Family -> Generator String
+favoredPraenomen family =
+  let favored = RandomE.select family.favoredPraenomen
+      defaultGeneric praenomen =
+        case praenomen of
+          Just praenomen' -> RandomE.constant praenomen'
+          Nothing -> genericPraenomen
+  in
+     favored `andThen` defaultGeneric
+
+familyPraenomen : Family -> Generator String
+familyPraenomen family =
+  let favoredPraenomen' = favoredPraenomen family
+  in
+     RandomE.flatMap2 (rollOdds 80) favoredPraenomen' genericPraenomen
+
 agnomen : Generator (Maybe String)
 agnomen =
   RandomE.selectWithDefault "Pius" ["Pius", "Felix", "Africanus"]
@@ -45,11 +60,12 @@ nickNames cognomen =
     Just _ -> Random.map (\agnomen' -> (cognomen, agnomen')) agnomen
     Nothing -> RandomE.constant (Nothing, Nothing)
 
-names : Family -> Generator (Family, Maybe String, Maybe String)
+names : Family -> Generator (String, Family, Maybe String, Maybe String)
 names family =
   let nickNames' = (familyCognomen family) `andThen` nickNames
+      praenomen' = familyPraenomen family
   in
-     Random.map (\(cn, an) -> (family, cn, an)) nickNames'
+     Random.map2 (\pn (cn, an) -> (pn, family, cn, an)) praenomen' nickNames'
 
 socialStatus : Generator SocialStatus
 socialStatus =
@@ -71,24 +87,24 @@ plebian =
 
 patricianFamilies : List Family
 patricianFamilies =
-  [ Family Patrician "Julius" ["Caesar", "Iulus"]
-  , Family Patrician "Fabius" ["Maximus", "Licinus"]
-  , Family Patrician "Junius" ["Brutus", "Silanus"]
-  , Family Patrician "Aemelius" ["Paulus", "Lepidus"]
+  [ Family Patrician "Julius" ["Caesar", "Iulus"] ["Lucius", "Gaius", "Sextus"]
+  , Family Patrician "Fabius" ["Maximus", "Licinus"] ["Caeso", "Quintus", "Marcus"]
+  , Family Patrician "Junius" ["Brutus", "Silanus"] ["Marcus", "Decimus", "Lucius"]
+  , Family Patrician "Aemelius" ["Paulus", "Lepidus"] ["Lucius", "Marcus", "Quintus"]
   ]
 
 defaultPatricianFamily : Family
 defaultPatricianFamily =
-  Family Patrician "Julius" ["Caesar", "Iulus"]
+  Family Patrician "Julius" ["Caesar", "Iulus"] ["Lucius", "Gaius", "Sextus"]
 
 plebianFamilies : List Family
 plebianFamilies =
-  [ Family Plebian "Octavius" ["Rufus"]
-  , Family Plebian "Marius" []
-  , Family Plebian "Livius" ["Drusus"]
-  , Family Plebian "Domitius" ["Calvinus", "Ahenobarbus"]
+  [ Family Plebian "Octavius" ["Rufus"] ["Gnaeus", "Gaius", "Marcus"]
+  , Family Plebian "Marius" [] ["Gaius", "Lucius", "Sextus"]
+  , Family Plebian "Livius" ["Drusus"] ["Gaius", "Lucius", "Titus"]
+  , Family Plebian "Domitius" ["Calvinus", "Ahenobarbus"] ["Gnaeus", "Marcus", "Lucius"]
   ]
 
 defaultPlebianFamily : Family
 defaultPlebianFamily =
-  Family Plebian "Octavius" ["Rufus"]
+  Family Plebian "Octavius" ["Rufus"] []

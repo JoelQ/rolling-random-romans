@@ -7,6 +7,7 @@ type alias Family =
   { socialStatus : SocialStatus
   , nomen : String
   , cognomina : List String
+  , favoredPraenomen : List String
   }
 
 type alias Roman =
