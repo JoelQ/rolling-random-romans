@@ -10527,7 +10527,7 @@ Elm.Roman.make = function (_elm) {
       return A2($String.join," ",_U.list([roman.praenomen,nomen$,cognomen$,agnomen$]));
    };
    var Roman = F4(function (a,b,c,d) {    return {praenomen: a,family: b,cognomen: c,agnomen: d};});
-   var Family = F2(function (a,b) {    return {socialStatus: a,nomen: b};});
+   var Family = F3(function (a,b,c) {    return {socialStatus: a,nomen: b,cognomina: c};});
    var Plebian = {ctor: "Plebian"};
    var Patrician = {ctor: "Patrician"};
    return _elm.Roman.values = {_op: _op,Patrician: Patrician,Plebian: Plebian,Family: Family,Roman: Roman,name: name};
@@ -10552,16 +10552,16 @@ Elm.Random.Roman.make = function (_elm) {
    $Roman = Elm.Roman.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var defaultPlebianFamily = A2($Roman.Family,$Roman.Plebian,"Octavius");
-   var plebianFamilies = _U.list([A2($Roman.Family,$Roman.Plebian,"Octavius")
-                                 ,A2($Roman.Family,$Roman.Plebian,"Marius")
-                                 ,A2($Roman.Family,$Roman.Plebian,"Livius")
-                                 ,A2($Roman.Family,$Roman.Plebian,"Domitius")]);
-   var defaultPatricianFamily = A2($Roman.Family,$Roman.Patrician,"Julius");
-   var patricianFamilies = _U.list([A2($Roman.Family,$Roman.Patrician,"Julius")
-                                   ,A2($Roman.Family,$Roman.Patrician,"Fabius")
-                                   ,A2($Roman.Family,$Roman.Patrician,"Junius")
-                                   ,A2($Roman.Family,$Roman.Patrician,"Aemelius")]);
+   var defaultPlebianFamily = A3($Roman.Family,$Roman.Plebian,"Octavius",_U.list(["Rufus"]));
+   var plebianFamilies = _U.list([A3($Roman.Family,$Roman.Plebian,"Octavius",_U.list(["Rufus"]))
+                                 ,A3($Roman.Family,$Roman.Plebian,"Marius",_U.list([]))
+                                 ,A3($Roman.Family,$Roman.Plebian,"Livius",_U.list(["Drusus"]))
+                                 ,A3($Roman.Family,$Roman.Plebian,"Domitius",_U.list(["Calvinus","Ahenobarbus"]))]);
+   var defaultPatricianFamily = A3($Roman.Family,$Roman.Patrician,"Julius",_U.list(["Caesar","Iulus"]));
+   var patricianFamilies = _U.list([A3($Roman.Family,$Roman.Patrician,"Julius",_U.list(["Caesar","Iulus"]))
+                                   ,A3($Roman.Family,$Roman.Patrician,"Fabius",_U.list(["Maximus","Licinus"]))
+                                   ,A3($Roman.Family,$Roman.Patrician,"Junius",_U.list(["Brutus","Silanus"]))
+                                   ,A3($Roman.Family,$Roman.Patrician,"Aemelius",_U.list(["Paulus","Lepidus"]))]);
    var plebian = A2($Random$Extra.selectWithDefault,defaultPlebianFamily,plebianFamilies);
    var patrician = A2($Random$Extra.selectWithDefault,defaultPatricianFamily,patricianFamilies);
    var family = function (status) {    var _p0 = status;if (_p0.ctor === "Patrician") {    return patrician;} else {    return plebian;}};
@@ -10575,22 +10575,38 @@ Elm.Random.Roman.make = function (_elm) {
             return $Random$Extra.constant({ctor: "_Tuple2",_0: $Maybe.Nothing,_1: $Maybe.Nothing});
          }
    };
-   var cognomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Metellus",_U.list(["Metellus","Caesar","Brutus"])));
-   var nomen = A2($Random$Extra.selectWithDefault,"Julius",_U.list(["Julius","Fabius","Junius"]));
+   var genericCognomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Gallus",_U.list(["Gallus","Bibulus","Albinus"])));
+   var familyCognomen = function (family) {
+      var replaceNothingWithGeneric = function (cgnm) {
+         var _p2 = cgnm;
+         if (_p2.ctor === "Just") {
+               return $Random$Extra.constant($Maybe.Just(_p2._0));
+            } else {
+               return genericCognomen;
+            }
+      };
+      var cognomen$ = $Random$Extra.select(family.cognomina);
+      return A2($Random.andThen,cognomen$,replaceNothingWithGeneric);
+   };
+   var names = function (family) {
+      var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames);
+      return A2($Random.map,function (_p3) {    var _p4 = _p3;return {ctor: "_Tuple3",_0: family,_1: _p4._0,_2: _p4._1};},nickNames$);
+   };
    var praenomen = A2($Random$Extra.selectWithDefault,"Marcus",_U.list(["Marcus","Quintus","Gaius"]));
    var roman = function () {
-      var roman$ = F3(function (pn,f,_p2) {    var _p3 = _p2;return A4($Roman.Roman,pn,f,_p3._0,_p3._1);});
+      var roman$ = F2(function (pn,_p5) {    var _p6 = _p5;return A4($Roman.Roman,pn,_p6._0,_p6._1,_p6._2);});
       var family$ = A2($Random.andThen,socialStatus,family);
-      var nickNames$ = A2($Random.andThen,cognomen,nickNames);
-      return A4($Random.map3,roman$,praenomen,family$,nickNames$);
+      var names$ = A2($Random.andThen,family$,names);
+      return A3($Random.map2,roman$,praenomen,names$);
    }();
    return _elm.Random.Roman.values = {_op: _op
                                      ,roman: roman
                                      ,praenomen: praenomen
-                                     ,nomen: nomen
-                                     ,cognomen: cognomen
+                                     ,genericCognomen: genericCognomen
+                                     ,familyCognomen: familyCognomen
                                      ,agnomen: agnomen
                                      ,nickNames: nickNames
+                                     ,names: names
                                      ,socialStatus: socialStatus
                                      ,family: family
                                      ,patrician: patrician

@@ -6,6 +6,7 @@ type SocialStatus = Patrician | Plebian
 type alias Family =
   { socialStatus : SocialStatus
   , nomen : String
+  , cognomina : List String
   }
 
 type alias Roman =
