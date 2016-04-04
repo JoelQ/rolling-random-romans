@@ -10599,20 +10599,25 @@ Elm.Random.Roman.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var agnomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Pius",_U.list(["Pius","Felix","Africanus"])));
-   var nickNames = function (cognomen) {
-      var _p0 = cognomen;
-      if (_p0.ctor === "Just") {
-            return A2($Random.map,function (agnomen$) {    return {ctor: "_Tuple2",_0: cognomen,_1: agnomen$};},agnomen);
-         } else {
+   var nickNames = F2(function (gender,cognomen) {
+      var _p0 = gender;
+      if (_p0.ctor === "Female") {
             return $Random$Extra.constant({ctor: "_Tuple2",_0: $Maybe.Nothing,_1: $Maybe.Nothing});
+         } else {
+            var _p1 = cognomen;
+            if (_p1.ctor === "Just") {
+                  return A2($Random.map,function (agnomen$) {    return {ctor: "_Tuple2",_0: cognomen,_1: agnomen$};},agnomen);
+               } else {
+                  return $Random$Extra.constant({ctor: "_Tuple2",_0: $Maybe.Nothing,_1: $Maybe.Nothing});
+               }
          }
-   };
+   });
    var genericCognomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Gallus",_U.list(["Gallus","Bibulus","Albinus"])));
    var familyCognomen = function (family) {
       var replaceNothingWithGeneric = function (cgnm) {
-         var _p1 = cgnm;
-         if (_p1.ctor === "Just") {
-               return $Random$Extra.constant($Maybe.Just(_p1._0));
+         var _p2 = cgnm;
+         if (_p2.ctor === "Just") {
+               return $Random$Extra.constant($Maybe.Just(_p2._0));
             } else {
                return genericCognomen;
             }
@@ -10623,9 +10628,9 @@ Elm.Random.Roman.make = function (_elm) {
    var genericPraenomen = A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"]));
    var favoredPraenomen = function (family) {
       var defaultGeneric = function (praenomen) {
-         var _p2 = praenomen;
-         if (_p2.ctor === "Just") {
-               return $Random$Extra.constant(_p2._0);
+         var _p3 = praenomen;
+         if (_p3.ctor === "Just") {
+               return $Random$Extra.constant(_p3._0);
             } else {
                return genericPraenomen;
             }
@@ -10637,18 +10642,16 @@ Elm.Random.Roman.make = function (_elm) {
       var favoredPraenomen$ = favoredPraenomen(family);
       return A3($Random$Extra.flatMap2,$Random$Odds.rollOdds(80),favoredPraenomen$,genericPraenomen);
    };
-   var names = function (family) {
-      var praenomen$ = familyPraenomen(family);
-      var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames);
-      return A3($Random.map2,F2(function (pn,_p3) {    var _p4 = _p3;return {ctor: "_Tuple4",_0: pn,_1: family,_2: _p4._0,_3: _p4._1};}),praenomen$,nickNames$);
-   };
    var gender = A3($Random$Odds.rollOdds,50,$Roman.Female,$Roman.Male);
-   var roman = A3($Random.map2,
-   F2(function (g,_p5) {    var _p6 = _p5;return A5($Roman.Roman,g,_p6._0,_p6._1,_p6._2,_p6._3);}),
-   gender,
-   A2($Random.andThen,A2($Random.andThen,$Random$Family.socialStatus,$Random$Family.family),names));
+   var romanFromGenderAndFamily = F2(function (gender,family) {
+      var praenomen$ = familyPraenomen(family);
+      var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames(gender));
+      return A3($Random.map2,F2(function (pn,_p4) {    var _p5 = _p4;return A5($Roman.Roman,gender,pn,family,_p5._0,_p5._1);}),praenomen$,nickNames$);
+   });
+   var roman = A3($Random$Extra.flatMap2,romanFromGenderAndFamily,gender,A2($Random.andThen,$Random$Family.socialStatus,$Random$Family.family));
    return _elm.Random.Roman.values = {_op: _op
                                      ,roman: roman
+                                     ,romanFromGenderAndFamily: romanFromGenderAndFamily
                                      ,gender: gender
                                      ,genericPraenomen: genericPraenomen
                                      ,genericCognomen: genericCognomen
@@ -10656,8 +10659,7 @@ Elm.Random.Roman.make = function (_elm) {
                                      ,favoredPraenomen: favoredPraenomen
                                      ,familyPraenomen: familyPraenomen
                                      ,agnomen: agnomen
-                                     ,nickNames: nickNames
-                                     ,names: names};
+                                     ,nickNames: nickNames};
 };
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {

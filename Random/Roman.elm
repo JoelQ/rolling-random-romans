@@ -10,10 +10,15 @@ import Roman exposing (Roman, Family, Gender(..))
 
 roman : Generator Roman
 roman =
-  socialStatus
-  `andThen` family
-  `andThen` names
-    |> Random.map2 (\g (pn, f, cn, an) -> Roman g pn f cn an) gender
+  socialStatus `andThen` family
+    |> RandomE.flatMap2 romanFromGenderAndFamily gender
+
+romanFromGenderAndFamily : Gender -> Family -> Generator Roman
+romanFromGenderAndFamily gender family =
+  let nickNames' = (familyCognomen family) `andThen` (nickNames gender)
+      praenomen' = familyPraenomen family
+  in
+     Random.map2 (\pn (cn, an) -> Roman gender pn family cn an) praenomen' nickNames'
 
 gender : Generator Gender
 gender = rollOdds 50 Female Male
@@ -58,15 +63,11 @@ agnomen =
   RandomE.selectWithDefault "Pius" ["Pius", "Felix", "Africanus"]
     |> RandomM.maybe
 
-nickNames : Maybe String -> Generator (Maybe String, Maybe String)
-nickNames cognomen =
-  case cognomen of
-    Just _ -> Random.map (\agnomen' -> (cognomen, agnomen')) agnomen
-    Nothing -> RandomE.constant (Nothing, Nothing)
-
-names : Family -> Generator (String, Family, Maybe String, Maybe String)
-names family =
-  let nickNames' = (familyCognomen family) `andThen` nickNames
-      praenomen' = familyPraenomen family
-  in
-     Random.map2 (\pn (cn, an) -> (pn, family, cn, an)) praenomen' nickNames'
+nickNames : Gender -> Maybe String -> Generator (Maybe String, Maybe String)
+nickNames gender cognomen =
+  case gender of
+    Female -> RandomE.constant (Nothing, Nothing)
+    Male ->
+      case cognomen of
+        Just _ -> Random.map (\agnomen' -> (cognomen, agnomen')) agnomen
+        Nothing -> RandomE.constant (Nothing, Nothing)
