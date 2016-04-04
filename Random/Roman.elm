@@ -66,9 +66,7 @@ agnomen =
 
 nickNames : Gender -> Maybe String -> Generator (Maybe String, Maybe String)
 nickNames gender cognomen =
-  case gender of
-    Female -> RandomE.constant (Nothing, Nothing)
-    Male ->
-      case cognomen of
-        Just _ -> Random.map (\agnomen' -> (cognomen, agnomen')) agnomen
-        Nothing -> RandomE.constant (Nothing, Nothing)
+  case (gender, cognomen) of
+    (Female, _) -> RandomE.constant (Nothing, Nothing)
+    (Male, Nothing) -> RandomE.constant (Nothing, Nothing)
+    (Male, Just _) -> Random.map (\agnomen' -> (cognomen, agnomen')) agnomen
