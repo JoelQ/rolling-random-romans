@@ -10641,28 +10641,40 @@ Elm.Random.Roman.make = function (_elm) {
       var randomCognomen = $Random$Extra.select(family.cognomina);
       return A2($Random.andThen,randomCognomen,replaceNothingWithGeneric);
    };
-   var genericPraenomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"])));
-   var favoredPraenomen = function (family) {
+   var genericPraenomen = function (gender$) {
+      var _p2 = gender$;
+      if (_p2.ctor === "Female") {
+            return $Random$Extra.constant($Maybe.Nothing);
+         } else {
+            return $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"])));
+         }
+   };
+   var favoredPraenomen = F2(function (family,gender$) {
       var defaultGeneric = function (praenomen$) {
-         var _p2 = praenomen$;
-         if (_p2.ctor === "Just") {
-               return $Random$Extra.constant(praenomen$);
+         var _p3 = {ctor: "_Tuple2",_0: gender$,_1: praenomen$};
+         if (_p3._0.ctor === "Female") {
+               return $Random$Extra.constant($Maybe.Nothing);
             } else {
-               return genericPraenomen;
+               if (_p3._1.ctor === "Nothing") {
+                     return genericPraenomen(gender$);
+                  } else {
+                     return $Random$Extra.constant(praenomen$);
+                  }
             }
       };
       var favored = $Random$Extra.select(family.favoredPraenomen);
       return A2($Random.andThen,favored,defaultGeneric);
-   };
-   var familyPraenomen = function (family) {
-      var favoredPraenomen$ = favoredPraenomen(family);
-      return A3($Random$Extra.flatMap2,$Random$Odds.rollOdds(80),favoredPraenomen$,genericPraenomen);
-   };
+   });
+   var familyPraenomen = F2(function (family,gender$) {
+      var genericPraenomen$ = genericPraenomen(gender$);
+      var favoredPraenomen$ = A2(favoredPraenomen,family,gender$);
+      return A3($Random$Extra.flatMap2,$Random$Odds.rollOdds(80),favoredPraenomen$,genericPraenomen$);
+   });
    var gender = A3($Random$Odds.rollOdds,50,$Roman.Female,$Roman.Male);
-   var romanFromGenderAndFamily = F2(function (gender,family) {
-      var praenomen$ = familyPraenomen(family);
-      var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames(gender));
-      return A3($Random.map2,F2(function (pn,_p3) {    var _p4 = _p3;return A5($Roman.Roman,gender,pn,family,_p4._0,_p4._1);}),praenomen$,nickNames$);
+   var romanFromGenderAndFamily = F2(function (gender$,family) {
+      var praenomen$ = A2(familyPraenomen,family,gender$);
+      var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames(gender$));
+      return A3($Random.map2,F2(function (pn,_p4) {    var _p5 = _p4;return A5($Roman.Roman,gender$,pn,family,_p5._0,_p5._1);}),praenomen$,nickNames$);
    });
    var roman = A3($Random$Extra.flatMap2,romanFromGenderAndFamily,gender,A2($Random.andThen,$Random$Family.socialStatus,$Random$Family.family));
    return _elm.Random.Roman.values = {_op: _op

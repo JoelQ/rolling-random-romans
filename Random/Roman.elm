@@ -14,19 +14,22 @@ roman =
     |> RandomE.flatMap2 romanFromGenderAndFamily gender
 
 romanFromGenderAndFamily : Gender -> Family -> Generator Roman
-romanFromGenderAndFamily gender family =
-  let nickNames' = (familyCognomen family) `andThen` (nickNames gender)
-      praenomen' = familyPraenomen family
+romanFromGenderAndFamily gender' family =
+  let nickNames' = (familyCognomen family) `andThen` (nickNames gender')
+      praenomen' = familyPraenomen family gender'
   in
-     Random.map2 (\pn (cn, an) -> Roman gender pn family cn an) praenomen' nickNames'
+     Random.map2 (\pn (cn, an) -> Roman gender' pn family cn an) praenomen' nickNames'
 
 gender : Generator Gender
 gender = rollOdds 50 Female Male
 
-genericPraenomen : Generator (Maybe String)
-genericPraenomen =
-  RandomE.selectWithDefault "Publius" ["Publius", "Appius", "Tiberius"]
-    |> RandomM.maybe
+genericPraenomen : Gender -> Generator (Maybe String)
+genericPraenomen gender' =
+  case gender' of
+    Female -> RandomE.constant Nothing
+    Male ->
+      RandomE.selectWithDefault "Publius" ["Publius", "Appius", "Tiberius"]
+        |> RandomM.maybe
 
 genericCognomen : Generator (Maybe String)
 genericCognomen =
@@ -43,21 +46,23 @@ familyCognomen family =
   in
      randomCognomen `andThen` replaceNothingWithGeneric
 
-favoredPraenomen : Family -> Generator (Maybe String)
-favoredPraenomen family =
+favoredPraenomen : Family -> Gender -> Generator (Maybe String)
+favoredPraenomen family gender' =
   let favored = RandomE.select family.favoredPraenomen
       defaultGeneric praenomen' =
-        case praenomen' of
-          Just _ -> RandomE.constant praenomen'
-          Nothing -> genericPraenomen
+        case (gender', praenomen') of
+          (Female, _) -> RandomE.constant Nothing
+          (Male, Nothing) -> genericPraenomen gender'
+          (Male, Just _) -> RandomE.constant praenomen'
   in
      favored `andThen` defaultGeneric
 
-familyPraenomen : Family -> Generator (Maybe String)
-familyPraenomen family =
-  let favoredPraenomen' = favoredPraenomen family
+familyPraenomen : Family -> Gender -> Generator (Maybe String)
+familyPraenomen family gender' =
+  let favoredPraenomen' = favoredPraenomen family gender'
+      genericPraenomen' = genericPraenomen gender'
   in
-     RandomE.flatMap2 (rollOdds 80) favoredPraenomen' genericPraenomen
+     RandomE.flatMap2 (rollOdds 80) favoredPraenomen' genericPraenomen'
 
 agnomen : Generator (Maybe String)
 agnomen =
