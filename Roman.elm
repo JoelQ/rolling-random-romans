@@ -1,6 +1,10 @@
 module Roman where
+import Html exposing (Html, span, p, text)
+import Html.Attributes exposing(property)
+import Json.Encode
 import String
 
+-- MODEL 
 type SocialStatus = Patrician | Plebian
 type Gender = Female | Male
 
@@ -33,3 +37,18 @@ genderedNomen gender nomen =
   case gender of
     Female -> nomen
     Male -> (String.dropRight 1 nomen) ++ "us"
+
+-- VIEW
+
+view : Roman -> Html
+view roman =
+  p []
+  [ span [property "innerHTML" (Json.Encode.string <| genderSymbol roman)] []
+  , span [] [ text (name roman) ]
+  ]
+
+genderSymbol : Roman -> String
+genderSymbol roman =
+  case roman.gender of
+    Female -> "&female;"
+    Male -> "&male;"

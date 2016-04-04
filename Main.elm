@@ -1,4 +1,4 @@
-import Html exposing (Html, main', h1, p, text)
+import Html exposing (Html, main', h1, text)
 import Random
 import Random.Roman as RandomR
 import Roman exposing(Roman)
@@ -14,5 +14,5 @@ main : Html
 main =
   main' []
   [ h1 [] [ text "Rolling Random Romans" ]
-  , p [] [ randomRoman |> Roman.name |> text ]
+  , Roman.view randomRoman
   ]
