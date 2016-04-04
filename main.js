@@ -10601,23 +10601,22 @@ Elm.Random.Roman.make = function (_elm) {
    var _op = {};
    var agnomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Pius",_U.list(["Pius","Felix","Africanus"])));
    var nickNames = F2(function (gender,cognomen) {
-      var _p0 = gender;
-      if (_p0.ctor === "Female") {
+      var _p0 = {ctor: "_Tuple2",_0: gender,_1: cognomen};
+      if (_p0._0.ctor === "Female") {
             return $Random$Extra.constant({ctor: "_Tuple2",_0: $Maybe.Nothing,_1: $Maybe.Nothing});
          } else {
-            var _p1 = cognomen;
-            if (_p1.ctor === "Just") {
-                  return A2($Random.map,function (agnomen$) {    return {ctor: "_Tuple2",_0: cognomen,_1: agnomen$};},agnomen);
-               } else {
+            if (_p0._1.ctor === "Nothing") {
                   return $Random$Extra.constant({ctor: "_Tuple2",_0: $Maybe.Nothing,_1: $Maybe.Nothing});
+               } else {
+                  return A2($Random.map,function (agnomen$) {    return {ctor: "_Tuple2",_0: cognomen,_1: agnomen$};},agnomen);
                }
          }
    });
    var genericCognomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Gallus",_U.list(["Gallus","Bibulus","Albinus"])));
    var familyCognomen = function (family) {
       var replaceNothingWithGeneric = function (cognomen$) {
-         var _p2 = cognomen$;
-         if (_p2.ctor === "Just") {
+         var _p1 = cognomen$;
+         if (_p1.ctor === "Just") {
                return $Random$Extra.constant(cognomen$);
             } else {
                return genericCognomen;
@@ -10629,8 +10628,8 @@ Elm.Random.Roman.make = function (_elm) {
    var genericPraenomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"])));
    var favoredPraenomen = function (family) {
       var defaultGeneric = function (praenomen$) {
-         var _p3 = praenomen$;
-         if (_p3.ctor === "Just") {
+         var _p2 = praenomen$;
+         if (_p2.ctor === "Just") {
                return $Random$Extra.constant(praenomen$);
             } else {
                return genericPraenomen;
@@ -10647,7 +10646,7 @@ Elm.Random.Roman.make = function (_elm) {
    var romanFromGenderAndFamily = F2(function (gender,family) {
       var praenomen$ = familyPraenomen(family);
       var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames(gender));
-      return A3($Random.map2,F2(function (pn,_p4) {    var _p5 = _p4;return A5($Roman.Roman,gender,pn,family,_p5._0,_p5._1);}),praenomen$,nickNames$);
+      return A3($Random.map2,F2(function (pn,_p3) {    var _p4 = _p3;return A5($Roman.Roman,gender,pn,family,_p4._0,_p4._1);}),praenomen$,nickNames$);
    });
    var roman = A3($Random$Extra.flatMap2,romanFromGenderAndFamily,gender,A2($Random.andThen,$Random$Family.socialStatus,$Random$Family.family));
    return _elm.Random.Roman.values = {_op: _op
