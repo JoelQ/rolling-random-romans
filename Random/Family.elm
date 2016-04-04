@@ -26,24 +26,24 @@ plebian =
 
 patricianFamilies : List Family
 patricianFamilies =
-  [ Family Patrician "Julius" ["Caesar", "Iulus"] ["Lucius", "Gaius", "Sextus"]
-  , Family Patrician "Fabius" ["Maximus", "Licinus"] ["Caeso", "Quintus", "Marcus"]
-  , Family Patrician "Junius" ["Brutus", "Silanus"] ["Marcus", "Decimus", "Lucius"]
-  , Family Patrician "Aemelius" ["Paulus", "Lepidus"] ["Lucius", "Marcus", "Quintus"]
+  [ Family Patrician "Julia" ["Caesar", "Iulus"] ["Lucius", "Gaius", "Sextus"]
+  , Family Patrician "Fabia" ["Maximus", "Licinus"] ["Caeso", "Quintus", "Marcus"]
+  , Family Patrician "Fabia" ["Brutus", "Silanus"] ["Marcus", "Decimus", "Lucius"]
+  , Family Patrician "Aemelia" ["Paulus", "Lepidus"] ["Lucius", "Marcus", "Quintus"]
   ]
 
 defaultPatricianFamily : Family
 defaultPatricianFamily =
-  Family Patrician "Julius" ["Caesar", "Iulus"] ["Lucius", "Gaius", "Sextus"]
+  Family Patrician "Julia" ["Caesar", "Iulus"] ["Lucius", "Gaius", "Sextus"]
 
 plebianFamilies : List Family
 plebianFamilies =
-  [ Family Plebian "Octavius" ["Rufus"] ["Gnaeus", "Gaius", "Marcus"]
-  , Family Plebian "Marius" [] ["Gaius", "Lucius", "Sextus"]
-  , Family Plebian "Livius" ["Drusus"] ["Gaius", "Lucius", "Titus"]
-  , Family Plebian "Domitius" ["Calvinus", "Ahenobarbus"] ["Gnaeus", "Marcus", "Lucius"]
+  [ Family Plebian "Octavia" ["Rufus"] ["Gnaeus", "Gaius", "Marcus"]
+  , Family Plebian "Maria" [] ["Gaius", "Lucius", "Sextus"]
+  , Family Plebian "Livia" ["Drusus"] ["Gaius", "Lucius", "Titus"]
+  , Family Plebian "Domitia" ["Calvinus", "Ahenobarbus"] ["Gnaeus", "Marcus", "Lucius"]
   ]
 
 defaultPlebianFamily : Family
 defaultPlebianFamily =
-  Family Plebian "Octavius" ["Rufus"] []
+  Family Plebian "Octavia" ["Rufus"] ["Gnaeus", "Gaius", "Marcus"]

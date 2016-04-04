@@ -24,6 +24,12 @@ name roman =
   let cognomen' = Maybe.withDefault "" roman.cognomen
       agnomen' = Maybe.withDefault "" roman.agnomen
       praenomen' = Maybe.withDefault "" roman.praenomen
-      nomen' = roman.family.nomen
+      nomen' = genderedNomen roman.gender roman.family.nomen
   in
      String.join " " [praenomen', nomen', cognomen', agnomen']
+
+genderedNomen : Gender -> String -> String
+genderedNomen gender nomen =
+  case gender of
+    Female -> nomen
+    Male -> (String.dropRight 1 nomen) ++ "us"
