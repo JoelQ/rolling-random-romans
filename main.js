@@ -10526,11 +10526,13 @@ Elm.Roman.make = function (_elm) {
       var cognomen$ = A2($Maybe.withDefault,"",roman.cognomen);
       return A2($String.join," ",_U.list([roman.praenomen,nomen$,cognomen$,agnomen$]));
    };
-   var Roman = F4(function (a,b,c,d) {    return {praenomen: a,family: b,cognomen: c,agnomen: d};});
+   var Roman = F5(function (a,b,c,d,e) {    return {gender: a,praenomen: b,family: c,cognomen: d,agnomen: e};});
    var Family = F4(function (a,b,c,d) {    return {socialStatus: a,nomen: b,cognomina: c,favoredPraenomen: d};});
+   var Male = {ctor: "Male"};
+   var Female = {ctor: "Female"};
    var Plebian = {ctor: "Plebian"};
    var Patrician = {ctor: "Patrician"};
-   return _elm.Roman.values = {_op: _op,Patrician: Patrician,Plebian: Plebian,Family: Family,Roman: Roman,name: name};
+   return _elm.Roman.values = {_op: _op,Patrician: Patrician,Plebian: Plebian,Female: Female,Male: Male,Family: Family,Roman: Roman,name: name};
 };
 Elm.Random = Elm.Random || {};
 Elm.Random.Family = Elm.Random.Family || {};
@@ -10640,14 +10642,14 @@ Elm.Random.Roman.make = function (_elm) {
       var nickNames$ = A2($Random.andThen,familyCognomen(family),nickNames);
       return A3($Random.map2,F2(function (pn,_p3) {    var _p4 = _p3;return {ctor: "_Tuple4",_0: pn,_1: family,_2: _p4._0,_3: _p4._1};}),praenomen$,nickNames$);
    };
-   var roman = A2($Random.map,
-   function (_p5) {
-      var _p6 = _p5;
-      return A4($Roman.Roman,_p6._0,_p6._1,_p6._2,_p6._3);
-   },
+   var gender = A3($Random$Odds.rollOdds,50,$Roman.Female,$Roman.Male);
+   var roman = A3($Random.map2,
+   F2(function (g,_p5) {    var _p6 = _p5;return A5($Roman.Roman,g,_p6._0,_p6._1,_p6._2,_p6._3);}),
+   gender,
    A2($Random.andThen,A2($Random.andThen,$Random$Family.socialStatus,$Random$Family.family),names));
    return _elm.Random.Roman.values = {_op: _op
                                      ,roman: roman
+                                     ,gender: gender
                                      ,genericPraenomen: genericPraenomen
                                      ,genericCognomen: genericCognomen
                                      ,familyCognomen: familyCognomen
