@@ -2,6 +2,7 @@ module Roman where
 import String
 
 type SocialStatus = Patrician | Plebian
+type Gender = Female | Male
 
 type alias Family =
   { socialStatus : SocialStatus
@@ -11,7 +12,8 @@ type alias Family =
   }
 
 type alias Roman =
-  { praenomen : String
+  { gender : Gender
+  , praenomen : String
   , family : Family
   , cognomen : Maybe String
   , agnomen : Maybe String

@@ -6,14 +6,17 @@ import Random.Maybe as RandomM
 import Random.Odds exposing(rollOdds)
 import Random.Family exposing (socialStatus, family)
 
-import Roman exposing (Roman, Family, SocialStatus(..))
+import Roman exposing (Roman, Family, Gender(..))
 
 roman : Generator Roman
 roman =
   socialStatus
   `andThen` family
   `andThen` names
-    |> Random.map (\(pn, f, cn, an) -> Roman pn f cn an)
+    |> Random.map2 (\g (pn, f, cn, an) -> Roman g pn f cn an) gender
+
+gender : Generator Gender
+gender = rollOdds 50 Female Male
 
 genericPraenomen : Generator String
 genericPraenomen =
