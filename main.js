@@ -10520,8 +10520,16 @@ Elm.Roman.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
+   var genderedNomen = F2(function (gender,nomen) {
+      var _p0 = gender;
+      if (_p0.ctor === "Female") {
+            return nomen;
+         } else {
+            return A2($Basics._op["++"],A2($String.dropRight,1,nomen),"us");
+         }
+   });
    var name = function (roman) {
-      var nomen$ = roman.family.nomen;
+      var nomen$ = A2(genderedNomen,roman.gender,roman.family.nomen);
       var praenomen$ = A2($Maybe.withDefault,"",roman.praenomen);
       var agnomen$ = A2($Maybe.withDefault,"",roman.agnomen);
       var cognomen$ = A2($Maybe.withDefault,"",roman.cognomen);
@@ -10533,7 +10541,15 @@ Elm.Roman.make = function (_elm) {
    var Female = {ctor: "Female"};
    var Plebian = {ctor: "Plebian"};
    var Patrician = {ctor: "Patrician"};
-   return _elm.Roman.values = {_op: _op,Patrician: Patrician,Plebian: Plebian,Female: Female,Male: Male,Family: Family,Roman: Roman,name: name};
+   return _elm.Roman.values = {_op: _op
+                              ,Patrician: Patrician
+                              ,Plebian: Plebian
+                              ,Female: Female
+                              ,Male: Male
+                              ,Family: Family
+                              ,Roman: Roman
+                              ,name: name
+                              ,genderedNomen: genderedNomen};
 };
 Elm.Random = Elm.Random || {};
 Elm.Random.Family = Elm.Random.Family || {};
@@ -10554,16 +10570,16 @@ Elm.Random.Family.make = function (_elm) {
    $Roman = Elm.Roman.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var defaultPlebianFamily = A4($Roman.Family,$Roman.Plebian,"Octavius",_U.list(["Rufus"]),_U.list([]));
-   var plebianFamilies = _U.list([A4($Roman.Family,$Roman.Plebian,"Octavius",_U.list(["Rufus"]),_U.list(["Gnaeus","Gaius","Marcus"]))
-                                 ,A4($Roman.Family,$Roman.Plebian,"Marius",_U.list([]),_U.list(["Gaius","Lucius","Sextus"]))
-                                 ,A4($Roman.Family,$Roman.Plebian,"Livius",_U.list(["Drusus"]),_U.list(["Gaius","Lucius","Titus"]))
-                                 ,A4($Roman.Family,$Roman.Plebian,"Domitius",_U.list(["Calvinus","Ahenobarbus"]),_U.list(["Gnaeus","Marcus","Lucius"]))]);
-   var defaultPatricianFamily = A4($Roman.Family,$Roman.Patrician,"Julius",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]));
-   var patricianFamilies = _U.list([A4($Roman.Family,$Roman.Patrician,"Julius",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]))
-                                   ,A4($Roman.Family,$Roman.Patrician,"Fabius",_U.list(["Maximus","Licinus"]),_U.list(["Caeso","Quintus","Marcus"]))
-                                   ,A4($Roman.Family,$Roman.Patrician,"Junius",_U.list(["Brutus","Silanus"]),_U.list(["Marcus","Decimus","Lucius"]))
-                                   ,A4($Roman.Family,$Roman.Patrician,"Aemelius",_U.list(["Paulus","Lepidus"]),_U.list(["Lucius","Marcus","Quintus"]))]);
+   var defaultPlebianFamily = A4($Roman.Family,$Roman.Plebian,"Octavia",_U.list(["Rufus"]),_U.list(["Gnaeus","Gaius","Marcus"]));
+   var plebianFamilies = _U.list([A4($Roman.Family,$Roman.Plebian,"Octavia",_U.list(["Rufus"]),_U.list(["Gnaeus","Gaius","Marcus"]))
+                                 ,A4($Roman.Family,$Roman.Plebian,"Maria",_U.list([]),_U.list(["Gaius","Lucius","Sextus"]))
+                                 ,A4($Roman.Family,$Roman.Plebian,"Livia",_U.list(["Drusus"]),_U.list(["Gaius","Lucius","Titus"]))
+                                 ,A4($Roman.Family,$Roman.Plebian,"Domitia",_U.list(["Calvinus","Ahenobarbus"]),_U.list(["Gnaeus","Marcus","Lucius"]))]);
+   var defaultPatricianFamily = A4($Roman.Family,$Roman.Patrician,"Julia",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]));
+   var patricianFamilies = _U.list([A4($Roman.Family,$Roman.Patrician,"Julia",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]))
+                                   ,A4($Roman.Family,$Roman.Patrician,"Fabia",_U.list(["Maximus","Licinus"]),_U.list(["Caeso","Quintus","Marcus"]))
+                                   ,A4($Roman.Family,$Roman.Patrician,"Fabia",_U.list(["Brutus","Silanus"]),_U.list(["Marcus","Decimus","Lucius"]))
+                                   ,A4($Roman.Family,$Roman.Patrician,"Aemelia",_U.list(["Paulus","Lepidus"]),_U.list(["Lucius","Marcus","Quintus"]))]);
    var plebian = A2($Random$Extra.selectWithDefault,defaultPlebianFamily,plebianFamilies);
    var patrician = A2($Random$Extra.selectWithDefault,defaultPatricianFamily,patricianFamilies);
    var family = function (status) {    var _p0 = status;if (_p0.ctor === "Patrician") {    return patrician;} else {    return plebian;}};
