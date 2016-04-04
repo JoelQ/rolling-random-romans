@@ -23,9 +23,10 @@ romanFromGenderAndFamily gender family =
 gender : Generator Gender
 gender = rollOdds 50 Female Male
 
-genericPraenomen : Generator String
+genericPraenomen : Generator (Maybe String)
 genericPraenomen =
   RandomE.selectWithDefault "Publius" ["Publius", "Appius", "Tiberius"]
+    |> RandomM.maybe
 
 genericCognomen : Generator (Maybe String)
 genericCognomen =
@@ -34,25 +35,25 @@ genericCognomen =
 
 familyCognomen : Family -> Generator (Maybe String)
 familyCognomen family =
-  let cognomen' = RandomE.select family.cognomina
-      replaceNothingWithGeneric cgnm =
-        case cgnm of
-          Just c -> RandomE.constant (Just c)
+  let randomCognomen = RandomE.select family.cognomina
+      replaceNothingWithGeneric cognomen' =
+        case cognomen' of
+          Just _ -> RandomE.constant cognomen'
           Nothing -> genericCognomen
   in
-     cognomen' `andThen` replaceNothingWithGeneric
+     randomCognomen `andThen` replaceNothingWithGeneric
 
-favoredPraenomen : Family -> Generator String
+favoredPraenomen : Family -> Generator (Maybe String)
 favoredPraenomen family =
   let favored = RandomE.select family.favoredPraenomen
-      defaultGeneric praenomen =
-        case praenomen of
-          Just praenomen' -> RandomE.constant praenomen'
+      defaultGeneric praenomen' =
+        case praenomen' of
+          Just _ -> RandomE.constant praenomen'
           Nothing -> genericPraenomen
   in
      favored `andThen` defaultGeneric
 
-familyPraenomen : Family -> Generator String
+familyPraenomen : Family -> Generator (Maybe String)
 familyPraenomen family =
   let favoredPraenomen' = favoredPraenomen family
   in

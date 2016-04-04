@@ -13,7 +13,7 @@ type alias Family =
 
 type alias Roman =
   { gender : Gender
-  , praenomen : String
+  , praenomen : Maybe String
   , family : Family
   , cognomen : Maybe String
   , agnomen : Maybe String
@@ -23,6 +23,7 @@ name : Roman -> String
 name roman =
   let cognomen' = Maybe.withDefault "" roman.cognomen
       agnomen' = Maybe.withDefault "" roman.agnomen
+      praenomen' = Maybe.withDefault "" roman.praenomen
       nomen' = roman.family.nomen
   in
-     String.join " " [roman.praenomen, nomen', cognomen', agnomen']
+     String.join " " [praenomen', nomen', cognomen', agnomen']

@@ -10522,9 +10522,10 @@ Elm.Roman.make = function (_elm) {
    var _op = {};
    var name = function (roman) {
       var nomen$ = roman.family.nomen;
+      var praenomen$ = A2($Maybe.withDefault,"",roman.praenomen);
       var agnomen$ = A2($Maybe.withDefault,"",roman.agnomen);
       var cognomen$ = A2($Maybe.withDefault,"",roman.cognomen);
-      return A2($String.join," ",_U.list([roman.praenomen,nomen$,cognomen$,agnomen$]));
+      return A2($String.join," ",_U.list([praenomen$,nomen$,cognomen$,agnomen$]));
    };
    var Roman = F5(function (a,b,c,d,e) {    return {gender: a,praenomen: b,family: c,cognomen: d,agnomen: e};});
    var Family = F4(function (a,b,c,d) {    return {socialStatus: a,nomen: b,cognomina: c,favoredPraenomen: d};});
@@ -10614,23 +10615,23 @@ Elm.Random.Roman.make = function (_elm) {
    });
    var genericCognomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Gallus",_U.list(["Gallus","Bibulus","Albinus"])));
    var familyCognomen = function (family) {
-      var replaceNothingWithGeneric = function (cgnm) {
-         var _p2 = cgnm;
+      var replaceNothingWithGeneric = function (cognomen$) {
+         var _p2 = cognomen$;
          if (_p2.ctor === "Just") {
-               return $Random$Extra.constant($Maybe.Just(_p2._0));
+               return $Random$Extra.constant(cognomen$);
             } else {
                return genericCognomen;
             }
       };
-      var cognomen$ = $Random$Extra.select(family.cognomina);
-      return A2($Random.andThen,cognomen$,replaceNothingWithGeneric);
+      var randomCognomen = $Random$Extra.select(family.cognomina);
+      return A2($Random.andThen,randomCognomen,replaceNothingWithGeneric);
    };
-   var genericPraenomen = A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"]));
+   var genericPraenomen = $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"])));
    var favoredPraenomen = function (family) {
-      var defaultGeneric = function (praenomen) {
-         var _p3 = praenomen;
+      var defaultGeneric = function (praenomen$) {
+         var _p3 = praenomen$;
          if (_p3.ctor === "Just") {
-               return $Random$Extra.constant(_p3._0);
+               return $Random$Extra.constant(praenomen$);
             } else {
                return genericPraenomen;
             }
