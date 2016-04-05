@@ -4,7 +4,14 @@ import Random exposing (Generator, andThen)
 import Random.Extra as RandomE
 import Random.Odds exposing(rollOdds)
 
-import Roman exposing (Family, SocialStatus(..))
+import Family exposing
+  ( Family
+  , SocialStatus(..)
+  , defaultPlebianFamily
+  , defaultPatricianFamily
+  , plebianFamilies
+  , patricianFamilies
+  )
 
 socialStatus : Generator SocialStatus
 socialStatus =
@@ -23,27 +30,3 @@ patrician =
 plebian : Generator Family
 plebian =
   RandomE.selectWithDefault defaultPlebianFamily plebianFamilies
-
-patricianFamilies : List Family
-patricianFamilies =
-  [ Family Patrician "Julia" ["Caesar", "Iulus"] ["Lucius", "Gaius", "Sextus"]
-  , Family Patrician "Fabia" ["Maximus", "Licinus"] ["Caeso", "Quintus", "Marcus"]
-  , Family Patrician "Fabia" ["Brutus", "Silanus"] ["Marcus", "Decimus", "Lucius"]
-  , Family Patrician "Aemelia" ["Paulus", "Lepidus"] ["Lucius", "Marcus", "Quintus"]
-  ]
-
-defaultPatricianFamily : Family
-defaultPatricianFamily =
-  Family Patrician "Julia" ["Caesar", "Iulus"] ["Lucius", "Gaius", "Sextus"]
-
-plebianFamilies : List Family
-plebianFamilies =
-  [ Family Plebian "Octavia" ["Rufus"] ["Gnaeus", "Gaius", "Marcus"]
-  , Family Plebian "Maria" [] ["Gaius", "Lucius", "Sextus"]
-  , Family Plebian "Livia" ["Drusus"] ["Gaius", "Lucius", "Titus"]
-  , Family Plebian "Domitia" ["Calvinus", "Ahenobarbus"] ["Gnaeus", "Marcus", "Lucius"]
-  ]
-
-defaultPlebianFamily : Family
-defaultPlebianFamily =
-  Family Plebian "Octavia" ["Rufus"] ["Gnaeus", "Gaius", "Marcus"]
