@@ -4,16 +4,10 @@ import Html.Attributes exposing(property)
 import Json.Encode
 import String
 
--- MODEL 
-type SocialStatus = Patrician | Plebian
-type Gender = Female | Male
+import Family exposing(Family)
 
-type alias Family =
-  { socialStatus : SocialStatus
-  , nomen : String
-  , cognomina : List String
-  , favoredPraenomen : List String
-  }
+-- MODEL 
+type Gender = Female | Male
 
 type alias Roman =
   { gender : Gender

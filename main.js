@@ -10703,6 +10703,51 @@ Elm.Html.Attributes.make = function (_elm) {
                                         ,property: property
                                         ,attribute: attribute};
 };
+Elm.Family = Elm.Family || {};
+Elm.Family.make = function (_elm) {
+   "use strict";
+   _elm.Family = _elm.Family || {};
+   if (_elm.Family.values) return _elm.Family.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var Family = F4(function (a,b,c,d) {    return {socialStatus: a,nomen: b,cognomina: c,favoredPraenomen: d};});
+   var Plebian = {ctor: "Plebian"};
+   var octavia = A4(Family,Plebian,"Octavia",_U.list(["Rufus"]),_U.list(["Gnaeus","Gaius","Marcus"]));
+   var defaultPlebianFamily = octavia;
+   var maria = A4(Family,Plebian,"Maria",_U.list([]),_U.list(["Gaius","Lucius","Sextus"]));
+   var livia = A4(Family,Plebian,"Livia",_U.list(["Drusus"]),_U.list(["Gaius","Lucius","Titus"]));
+   var domitia = A4(Family,Plebian,"Domitia",_U.list(["Calvinus","Ahenobarbus"]),_U.list(["Gnaeus","Marcus","Lucius"]));
+   var plebianFamilies = _U.list([octavia,maria,livia,domitia]);
+   var Patrician = {ctor: "Patrician"};
+   var julia = A4(Family,Patrician,"Julia",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]));
+   var defaultPatricianFamily = julia;
+   var fabia = A4(Family,Patrician,"Fabia",_U.list(["Maximus","Licinus"]),_U.list(["Caeso","Quintus","Marcus"]));
+   var junia = A4(Family,Patrician,"Junia",_U.list(["Brutus","Silanus"]),_U.list(["Marcus","Decimus","Lucius"]));
+   var aemelia = A4(Family,Patrician,"Aemelia",_U.list(["Paulus","Lepidus"]),_U.list(["Lucius","Marcus","Quintus"]));
+   var patricianFamilies = _U.list([julia,fabia,junia,aemelia]);
+   return _elm.Family.values = {_op: _op
+                               ,Patrician: Patrician
+                               ,Plebian: Plebian
+                               ,Family: Family
+                               ,julia: julia
+                               ,fabia: fabia
+                               ,junia: junia
+                               ,aemelia: aemelia
+                               ,patricianFamilies: patricianFamilies
+                               ,defaultPatricianFamily: defaultPatricianFamily
+                               ,octavia: octavia
+                               ,maria: maria
+                               ,livia: livia
+                               ,domitia: domitia
+                               ,plebianFamilies: plebianFamilies
+                               ,defaultPlebianFamily: defaultPlebianFamily};
+};
 Elm.Random = Elm.Random || {};
 Elm.Random.Odds = Elm.Random.Odds || {};
 Elm.Random.Odds.make = function (_elm) {
@@ -10731,6 +10776,31 @@ Elm.Random.Odds.make = function (_elm) {
    var rollOdds = F3(function (odds,success,failure) {    return A2($Random.map,A3(oddsToValue,success,failure,odds),percent);});
    return _elm.Random.Odds.values = {_op: _op,percent: percent,rollOdds: rollOdds,oddsToValue: oddsToValue};
 };
+Elm.Random = Elm.Random || {};
+Elm.Random.Family = Elm.Random.Family || {};
+Elm.Random.Family.make = function (_elm) {
+   "use strict";
+   _elm.Random = _elm.Random || {};
+   _elm.Random.Family = _elm.Random.Family || {};
+   if (_elm.Random.Family.values) return _elm.Random.Family.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Family = Elm.Family.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Random = Elm.Random.make(_elm),
+   $Random$Extra = Elm.Random.Extra.make(_elm),
+   $Random$Odds = Elm.Random.Odds.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var plebian = A2($Random$Extra.selectWithDefault,$Family.defaultPlebianFamily,$Family.plebianFamilies);
+   var patrician = A2($Random$Extra.selectWithDefault,$Family.defaultPatricianFamily,$Family.patricianFamilies);
+   var family = function (status) {    var _p0 = status;if (_p0.ctor === "Patrician") {    return patrician;} else {    return plebian;}};
+   var socialStatus = A3($Random$Odds.rollOdds,70,$Family.Plebian,$Family.Patrician);
+   return _elm.Random.Family.values = {_op: _op,socialStatus: socialStatus,family: family,patrician: patrician,plebian: plebian};
+};
 Elm.Roman = Elm.Roman || {};
 Elm.Roman.make = function (_elm) {
    "use strict";
@@ -10739,6 +10809,7 @@ Elm.Roman.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Family = Elm.Family.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Json$Encode = Elm.Json.Encode.make(_elm),
@@ -10771,65 +10842,9 @@ Elm.Roman.make = function (_elm) {
               ,A2($Html.span,_U.list([]),_U.list([$Html.text(name(roman))]))]));
    };
    var Roman = F5(function (a,b,c,d,e) {    return {gender: a,praenomen: b,family: c,cognomen: d,agnomen: e};});
-   var Family = F4(function (a,b,c,d) {    return {socialStatus: a,nomen: b,cognomina: c,favoredPraenomen: d};});
    var Male = {ctor: "Male"};
    var Female = {ctor: "Female"};
-   var Plebian = {ctor: "Plebian"};
-   var Patrician = {ctor: "Patrician"};
-   return _elm.Roman.values = {_op: _op
-                              ,Patrician: Patrician
-                              ,Plebian: Plebian
-                              ,Female: Female
-                              ,Male: Male
-                              ,Family: Family
-                              ,Roman: Roman
-                              ,name: name
-                              ,genderedNomen: genderedNomen
-                              ,view: view
-                              ,genderSymbol: genderSymbol};
-};
-Elm.Random = Elm.Random || {};
-Elm.Random.Family = Elm.Random.Family || {};
-Elm.Random.Family.make = function (_elm) {
-   "use strict";
-   _elm.Random = _elm.Random || {};
-   _elm.Random.Family = _elm.Random.Family || {};
-   if (_elm.Random.Family.values) return _elm.Random.Family.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Random = Elm.Random.make(_elm),
-   $Random$Extra = Elm.Random.Extra.make(_elm),
-   $Random$Odds = Elm.Random.Odds.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Roman = Elm.Roman.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var defaultPlebianFamily = A4($Roman.Family,$Roman.Plebian,"Octavia",_U.list(["Rufus"]),_U.list(["Gnaeus","Gaius","Marcus"]));
-   var plebianFamilies = _U.list([A4($Roman.Family,$Roman.Plebian,"Octavia",_U.list(["Rufus"]),_U.list(["Gnaeus","Gaius","Marcus"]))
-                                 ,A4($Roman.Family,$Roman.Plebian,"Maria",_U.list([]),_U.list(["Gaius","Lucius","Sextus"]))
-                                 ,A4($Roman.Family,$Roman.Plebian,"Livia",_U.list(["Drusus"]),_U.list(["Gaius","Lucius","Titus"]))
-                                 ,A4($Roman.Family,$Roman.Plebian,"Domitia",_U.list(["Calvinus","Ahenobarbus"]),_U.list(["Gnaeus","Marcus","Lucius"]))]);
-   var defaultPatricianFamily = A4($Roman.Family,$Roman.Patrician,"Julia",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]));
-   var patricianFamilies = _U.list([A4($Roman.Family,$Roman.Patrician,"Julia",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]))
-                                   ,A4($Roman.Family,$Roman.Patrician,"Fabia",_U.list(["Maximus","Licinus"]),_U.list(["Caeso","Quintus","Marcus"]))
-                                   ,A4($Roman.Family,$Roman.Patrician,"Fabia",_U.list(["Brutus","Silanus"]),_U.list(["Marcus","Decimus","Lucius"]))
-                                   ,A4($Roman.Family,$Roman.Patrician,"Aemelia",_U.list(["Paulus","Lepidus"]),_U.list(["Lucius","Marcus","Quintus"]))]);
-   var plebian = A2($Random$Extra.selectWithDefault,defaultPlebianFamily,plebianFamilies);
-   var patrician = A2($Random$Extra.selectWithDefault,defaultPatricianFamily,patricianFamilies);
-   var family = function (status) {    var _p0 = status;if (_p0.ctor === "Patrician") {    return patrician;} else {    return plebian;}};
-   var socialStatus = A3($Random$Odds.rollOdds,70,$Roman.Plebian,$Roman.Patrician);
-   return _elm.Random.Family.values = {_op: _op
-                                      ,socialStatus: socialStatus
-                                      ,family: family
-                                      ,patrician: patrician
-                                      ,plebian: plebian
-                                      ,patricianFamilies: patricianFamilies
-                                      ,defaultPatricianFamily: defaultPatricianFamily
-                                      ,plebianFamilies: plebianFamilies
-                                      ,defaultPlebianFamily: defaultPlebianFamily};
+   return _elm.Roman.values = {_op: _op,Female: Female,Male: Male,Roman: Roman,name: name,genderedNomen: genderedNomen,view: view,genderSymbol: genderSymbol};
 };
 Elm.Random = Elm.Random || {};
 Elm.Random.Roman = Elm.Random.Roman || {};
@@ -10841,6 +10856,7 @@ Elm.Random.Roman.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Family = Elm.Family.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Random = Elm.Random.make(_elm),

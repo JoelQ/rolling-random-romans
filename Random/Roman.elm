@@ -6,7 +6,8 @@ import Random.Maybe as RandomM
 import Random.Odds exposing(rollOdds)
 import Random.Family exposing (socialStatus, family)
 
-import Roman exposing (Roman, Family, Gender(..))
+import Roman exposing (Roman, Gender(..))
+import Family exposing (Family)
 
 roman : Generator Roman
 roman =
