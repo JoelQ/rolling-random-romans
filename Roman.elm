@@ -1,6 +1,6 @@
 module Roman where
-import Html exposing (Html, span, p, text)
-import Html.Attributes exposing(property)
+import Html exposing (Html, span, p, text, div, img)
+import Html.Attributes exposing(property, src)
 import Json.Encode
 import String
 
@@ -36,9 +36,16 @@ genderedNomen gender nomen =
 
 view : Roman -> Html
 view roman =
-  p []
-  [ span [property "innerHTML" (Json.Encode.string <| genderSymbol roman)] []
-  , span [] [ text (name roman) ]
+  div []
+  [ p []
+    [ span [property "innerHTML" (Json.Encode.string <| genderSymbol roman)] []
+    , span [] [ text (name roman) ]
+    ]
+  , div []
+    [ img [ src roman.family.image.url ] []
+    , span [] [ text roman.family.image.attributionText ]
+    , span [] [ text roman.family.image.description ]
+    ]
   ]
 
 genderSymbol : Roman -> String

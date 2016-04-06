@@ -10716,29 +10716,95 @@ Elm.Family.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var Family = F4(function (a,b,c,d) {    return {socialStatus: a,nomen: b,cognomina: c,favoredPraenomen: d};});
+   var Family = F5(function (a,b,c,d,e) {    return {socialStatus: a,nomen: b,cognomina: c,favoredPraenomen: d,image: e};});
+   var Image = F3(function (a,b,c) {    return {url: a,attributionText: b,description: c};});
    var Plebian = {ctor: "Plebian"};
-   var octavia = A4(Family,Plebian,"Octavia",_U.list(["Rufus"]),_U.list(["Gnaeus","Gaius","Marcus"]));
+   var octavia = A5(Family,
+   Plebian,
+   "Octavia",
+   _U.list(["Rufus"]),
+   _U.list(["Gnaeus","Gaius","Marcus"]),
+   A3(Image,
+   "https://upload.wikimedia.org/wikipedia/commons/6/68/Cameo_August_BM_Gem3577.jpg",
+   "Public domain via Wikimedia Commons",
+   "Gaius Octavius Thurinus (a.k.a Augustus Caesar), adopted son of Julius\n      Caesar, defeator of Antony and Cleopatra, first emperor of Rome"));
    var defaultPlebianFamily = octavia;
-   var maria = A4(Family,Plebian,"Maria",_U.list([]),_U.list(["Gaius","Lucius","Sextus"]));
-   var livia = A4(Family,Plebian,"Livia",_U.list(["Drusus"]),_U.list(["Gaius","Lucius","Titus"]));
-   var domitia = A4(Family,Plebian,"Domitia",_U.list(["Calvinus","Ahenobarbus"]),_U.list(["Gnaeus","Marcus","Lucius"]));
+   var maria = A5(Family,
+   Plebian,
+   "Maria",
+   _U.list([]),
+   _U.list(["Gaius","Lucius","Sextus"]),
+   A3(Image,
+   "https://upload.wikimedia.org/wikipedia/commons/1/19/John_Vanderlyn_-_Caius_Marius_Amid_the_Ruins_of_Carthage_-_Google_Art_Project.jpg",
+   "Public domain via Wikimedia Commons",
+   "Gaius Marius, 7 time consul, victorious general, and reformer of the\n      Roman armies."));
+   var livia = A5(Family,
+   Plebian,
+   "Livia",
+   _U.list(["Drusus"]),
+   _U.list(["Gaius","Lucius","Titus"]),
+   A3(Image,
+   "https://upload.wikimedia.org/wikipedia/commons/b/b5/Gaius_Iulius_Caesar_Vatican.jpeg",
+   "CC-BY-SA-3.0, via Wikimedia Commons",
+   "Livia Drusilla, first empress of Rome"));
+   var domitia = A5(Family,
+   Plebian,
+   "Domitia",
+   _U.list(["Calvinus","Ahenobarbus"]),
+   _U.list(["Gnaeus","Marcus","Lucius"]),
+   A3(Image,
+   "https://upload.wikimedia.org/wikipedia/commons/f/fb/Nero_Palatino_Inv618.jpg",
+   "Public domain via Wikimedia Commons",
+   "Lucius Domitius Ahenobarbus (a.k.a Nero), 5th Roman emperor."));
    var plebianFamilies = _U.list([octavia,maria,livia,domitia]);
    var Patrician = {ctor: "Patrician"};
-   var julia = A4(Family,Patrician,"Julia",_U.list(["Caesar","Iulus"]),_U.list(["Lucius","Gaius","Sextus"]));
+   var julia = A5(Family,
+   Patrician,
+   "Julia",
+   _U.list(["Caesar","Iulus"]),
+   _U.list(["Lucius","Gaius","Sextus"]),
+   A3(Image,
+   "https://upload.wikimedia.org/wikipedia/commons/b/b5/Gaius_Iulius_Caesar_Vatican.jpeg",
+   "Public domain via Wikimedia Commons",
+   "Gaius Julius Caesar, conqueror of Gaul, Dictator of Rome, and arguably\n      the most famous Roman of all time"));
    var defaultPatricianFamily = julia;
-   var fabia = A4(Family,Patrician,"Fabia",_U.list(["Maximus","Licinus"]),_U.list(["Caeso","Quintus","Marcus"]));
-   var junia = A4(Family,Patrician,"Junia",_U.list(["Brutus","Silanus"]),_U.list(["Marcus","Decimus","Lucius"]));
-   var aemelia = A4(Family,Patrician,"Aemelia",_U.list(["Paulus","Lepidus"]),_U.list(["Lucius","Marcus","Quintus"]));
-   var patricianFamilies = _U.list([julia,fabia,junia,aemelia]);
+   var fabia = A5(Family,
+   Patrician,
+   "Fabia",
+   _U.list(["Maximus","Licinus"]),
+   _U.list(["Caeso","Quintus","Marcus"]),
+   A3(Image,
+   "https://upload.wikimedia.org/wikipedia/commons/a/ab/N26FabiusCunctator.jpg",
+   "Public domain via Wikimedia Commons",
+   "Quintus Fabius Maximus Cunctator, Dictator of Rome famous for wearing\n      down Hannibal with delaying tactics."));
+   var junia = A5(Family,
+   Patrician,
+   "Junia",
+   _U.list(["Brutus","Silanus"]),
+   _U.list(["Marcus","Decimus","Lucius"]),
+   A3(Image,
+   "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Ppr-brutus.JPG/398px-Ppr-brutus.JPG",
+   "Public domain via Wikimedia Commons",
+   "Marcus Junius Brutus, the most famous of Caesars assasins. His portrayal\n      as a traitorous friend or noble patriot had inspired controversy ever\n      since."));
+   var aemilia = A5(Family,
+   Patrician,
+   "Aemilia",
+   _U.list(["Paulus","Lepidus"]),
+   _U.list(["Lucius","Marcus","Quintus"]),
+   A3(Image,
+   "https://commons.wikimedia.org/wiki/File%3AThe_Triumph_of_Aemilius_Paulus_(detail).jpg",
+   "Public domain via Wikimedia Commons",
+   "Lucius Aemilius Paulus Macedonicus, two-time Consul and conqueror of\n        Macedonia (hence the agnomen)."));
+   var patricianFamilies = _U.list([julia,fabia,junia,aemilia]);
    return _elm.Family.values = {_op: _op
                                ,Patrician: Patrician
                                ,Plebian: Plebian
+                               ,Image: Image
                                ,Family: Family
                                ,julia: julia
                                ,fabia: fabia
                                ,junia: junia
-                               ,aemelia: aemelia
+                               ,aemilia: aemilia
                                ,patricianFamilies: patricianFamilies
                                ,defaultPatricianFamily: defaultPatricianFamily
                                ,octavia: octavia
@@ -10836,10 +10902,17 @@ Elm.Roman.make = function (_elm) {
       return A2($String.join," ",_U.list([praenomen$,nomen$,cognomen$,agnomen$]));
    };
    var view = function (roman) {
-      return A2($Html.p,
+      return A2($Html.div,
       _U.list([]),
-      _U.list([A2($Html.span,_U.list([A2($Html$Attributes.property,"innerHTML",$Json$Encode.string(genderSymbol(roman)))]),_U.list([]))
-              ,A2($Html.span,_U.list([]),_U.list([$Html.text(name(roman))]))]));
+      _U.list([A2($Html.p,
+              _U.list([]),
+              _U.list([A2($Html.span,_U.list([A2($Html$Attributes.property,"innerHTML",$Json$Encode.string(genderSymbol(roman)))]),_U.list([]))
+                      ,A2($Html.span,_U.list([]),_U.list([$Html.text(name(roman))]))]))
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Html.img,_U.list([$Html$Attributes.src(roman.family.image.url)]),_U.list([]))
+                      ,A2($Html.span,_U.list([]),_U.list([$Html.text(roman.family.image.attributionText)]))
+                      ,A2($Html.span,_U.list([]),_U.list([$Html.text(roman.family.image.description)]))]))]));
    };
    var Roman = F5(function (a,b,c,d,e) {    return {gender: a,praenomen: b,family: c,cognomen: d,agnomen: e};});
    var Male = {ctor: "Male"};
