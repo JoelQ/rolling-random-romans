@@ -30,7 +30,7 @@ genericPraenomen gender' =
     Female -> RandomE.constant Nothing
     Male ->
       RandomE.selectWithDefault "Publius" ["Publius", "Appius", "Tiberius"]
-        |> RandomM.maybe
+        |> Random.map Just
 
 genericCognomen : Generator (Maybe String)
 genericCognomen =
