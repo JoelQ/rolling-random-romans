@@ -10975,7 +10975,7 @@ Elm.Random.Roman.make = function (_elm) {
       if (_p2.ctor === "Female") {
             return $Random$Extra.constant($Maybe.Nothing);
          } else {
-            return $Random$Maybe.maybe(A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"])));
+            return A2($Random.map,$Maybe.Just,A2($Random$Extra.selectWithDefault,"Publius",_U.list(["Publius","Appius","Tiberius"])));
          }
    };
    var favoredPraenomen = F2(function (family,gender$) {
