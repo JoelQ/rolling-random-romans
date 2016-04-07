@@ -10814,6 +10814,34 @@ Elm.Family.make = function (_elm) {
                                ,plebianFamilies: plebianFamilies
                                ,defaultPlebianFamily: defaultPlebianFamily};
 };
+Elm.FamilyDetail = Elm.FamilyDetail || {};
+Elm.FamilyDetail.make = function (_elm) {
+   "use strict";
+   _elm.FamilyDetail = _elm.FamilyDetail || {};
+   if (_elm.FamilyDetail.values) return _elm.FamilyDetail.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Family = Elm.Family.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var view = function (family) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("family-detail")]),
+      _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(A2($Basics._op["++"],"Famous member of gens ",family.nomen))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("image-with-attribution")]),
+              _U.list([A2($Html.img,_U.list([$Html$Attributes.src(family.image.url)]),_U.list([]))
+                      ,A2($Html.p,_U.list([]),_U.list([A2($Html.small,_U.list([]),_U.list([$Html.text(family.image.attributionText)]))]))]))
+              ,A2($Html.p,_U.list([$Html$Attributes.$class("description")]),_U.list([$Html.text(family.image.description)]))]));
+   };
+   return _elm.FamilyDetail.values = {_op: _op,view: view};
+};
 Elm.Random = Elm.Random || {};
 Elm.Random.Odds = Elm.Random.Odds || {};
 Elm.Random.Odds.make = function (_elm) {
@@ -10876,6 +10904,7 @@ Elm.Roman.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Family = Elm.Family.make(_elm),
+   $FamilyDetail = Elm.FamilyDetail.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Json$Encode = Elm.Json.Encode.make(_elm),
@@ -10908,14 +10937,7 @@ Elm.Roman.make = function (_elm) {
               _U.list([$Html$Attributes.$class("name")]),
               _U.list([A2($Html.span,_U.list([A2($Html$Attributes.property,"innerHTML",$Json$Encode.string(genderSymbol(roman)))]),_U.list([]))
                       ,A2($Html.span,_U.list([]),_U.list([$Html.text(name(roman))]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("family-detail")]),
-              _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(A2($Basics._op["++"],"Famous member of gens ",roman.family.nomen))]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("image-with-attribution")]),
-                      _U.list([A2($Html.img,_U.list([$Html$Attributes.src(roman.family.image.url)]),_U.list([]))
-                              ,A2($Html.p,_U.list([]),_U.list([A2($Html.small,_U.list([]),_U.list([$Html.text(roman.family.image.attributionText)]))]))]))
-                      ,A2($Html.p,_U.list([$Html$Attributes.$class("description")]),_U.list([$Html.text(roman.family.image.description)]))]))]));
+              ,$FamilyDetail.view(roman.family)]));
    };
    var Roman = F5(function (a,b,c,d,e) {    return {gender: a,praenomen: b,family: c,cognomen: d,agnomen: e};});
    var Male = {ctor: "Male"};

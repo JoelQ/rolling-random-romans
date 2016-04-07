@@ -1,10 +1,11 @@
 module Roman where
-import Html exposing (Html, span, p, text, div, img, small, h2)
-import Html.Attributes exposing(property, src, class)
+import Html exposing (Html, span, text, div)
+import Html.Attributes exposing(property, class)
 import Json.Encode
 import String
 
 import Family exposing(Family)
+import FamilyDetail exposing(view)
 
 -- MODEL 
 type Gender = Female | Male
@@ -41,14 +42,7 @@ view roman =
     [ span [property "innerHTML" (Json.Encode.string <| genderSymbol roman)] []
     , span [] [ text (name roman) ]
     ]
-  , div [class "family-detail"]
-    [ h2 [] [ text ("Famous member of gens " ++ roman.family.nomen ) ]
-    , div [ class "image-with-attribution" ]
-      [ img [ src roman.family.image.url ] []
-      , p [] [ small[] [ text roman.family.image.attributionText ]]
-      ]
-    , p [ class "description" ] [ text roman.family.image.description ]
-    ]
+  , FamilyDetail.view(roman.family)
   ]
 
 genderSymbol : Roman -> String
