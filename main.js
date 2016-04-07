@@ -10904,15 +10904,18 @@ Elm.Roman.make = function (_elm) {
    var view = function (roman) {
       return A2($Html.div,
       _U.list([]),
-      _U.list([A2($Html.p,
-              _U.list([]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("name")]),
               _U.list([A2($Html.span,_U.list([A2($Html$Attributes.property,"innerHTML",$Json$Encode.string(genderSymbol(roman)))]),_U.list([]))
                       ,A2($Html.span,_U.list([]),_U.list([$Html.text(name(roman))]))]))
               ,A2($Html.div,
-              _U.list([]),
-              _U.list([A2($Html.img,_U.list([$Html$Attributes.src(roman.family.image.url)]),_U.list([]))
-                      ,A2($Html.span,_U.list([]),_U.list([$Html.text(roman.family.image.attributionText)]))
-                      ,A2($Html.span,_U.list([]),_U.list([$Html.text(roman.family.image.description)]))]))]));
+              _U.list([$Html$Attributes.$class("family-detail")]),
+              _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(A2($Basics._op["++"],"Famous member of gens ",roman.family.nomen))]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("image-with-attribution")]),
+                      _U.list([A2($Html.img,_U.list([$Html$Attributes.src(roman.family.image.url)]),_U.list([]))
+                              ,A2($Html.p,_U.list([]),_U.list([A2($Html.small,_U.list([]),_U.list([$Html.text(roman.family.image.attributionText)]))]))]))
+                      ,A2($Html.p,_U.list([$Html$Attributes.$class("description")]),_U.list([$Html.text(roman.family.image.description)]))]))]));
    };
    var Roman = F5(function (a,b,c,d,e) {    return {gender: a,praenomen: b,family: c,cognomen: d,agnomen: e};});
    var Male = {ctor: "Male"};
