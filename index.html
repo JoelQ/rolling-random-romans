@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="main.js"></script>
+    <style>
+      body {
+        font-family: "Calibre","Helvetica";
+        background-color: lightgrey;
+      }
+
+      h1 {
+        margin: 40px;
+      }
+
+      h2 {
+        text-align: center;
+      }
+
+      img {
+        max-width: 400px;
+        max-height: 400px;
+        margin-right: 40px;
+      }
+
+      .family-detail {
+        width: 40%;
+        float: right;
+        text-align: center;
+      }
+
+      .random-roman {
+        width: 50%;
+        float: left;
+        margin-left: 30px;
+      }
+
+      .description {
+        padding-right: 10%;
+        padding-left: 10%;
+      }
+
+      .wrapper {
+        width: 100%;
+      }
+
+      .name {
+        border: dotted;
+        background-color: lightgoldenrodyellow;
+        text-align: center;
+        font-style: italic;
+        font-size: 35px;
+        margin-top: 50px;
+        padding: 10px;
+        margin-bottom: 30px;
+      }
+
+      button {
+        font-size: 18px;
+      }
+
+      .button-container {
+        text-align: right;
+      }
+
+      .about {
+        margin-top: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      Elm.fullscreen(Elm.Main, { jsSeed: Math.floor(Math.random() * 10000000000) })
+    </script>
+  </body>
+</html>
