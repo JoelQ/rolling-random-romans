@@ -10753,7 +10753,7 @@ Elm.Family.make = function (_elm) {
    _U.list(["Calvinus","Ahenobarbus"]),
    _U.list(["Gnaeus","Marcus","Lucius"]),
    A3(Image,
-   "https://upload.wikimedia.org/wikipedia/commons/f/fb/Nero_Palatino_Inv618.jpg",
+   "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Nero_Palatino_Inv618.jpg/358px-Nero_Palatino_Inv618.jpg",
    "Public domain via Wikimedia Commons",
    "Lucius Domitius Ahenobarbus (a.k.a Nero), 5th Roman emperor."));
    var plebianFamilies = _U.list([octavia,maria,livia,domitia]);

@@ -129,7 +129,7 @@ domitia =
     ["Calvinus", "Ahenobarbus"]
     ["Gnaeus", "Marcus", "Lucius"]
     (Image
-      "https://upload.wikimedia.org/wikipedia/commons/f/fb/Nero_Palatino_Inv618.jpg"
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Nero_Palatino_Inv618.jpg/358px-Nero_Palatino_Inv618.jpg"
       "Public domain via Wikimedia Commons"
       "Lucius Domitius Ahenobarbus (a.k.a Nero), 5th Roman emperor."
     )
