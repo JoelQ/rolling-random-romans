@@ -1,6 +1,7 @@
 module Roman where
-import Html exposing (Html, span, text, div)
-import Html.Attributes exposing(property, class)
+import Html exposing (Html, span, text, div, button, p, a)
+import Html.Attributes exposing(property, class, href)
+import Html.Events exposing (onClick)
 import Json.Encode
 import String
 
@@ -35,15 +36,45 @@ genderedNomen gender nomen =
 
 -- VIEW
 
-view : Roman -> Html
-view roman =
-  div []
-  [ div [class "name"]
-    [ span [property "innerHTML" (Json.Encode.string <| genderSymbol roman)] []
-    , span [] [ text (name roman) ]
+view : Signal.Address () -> Roman -> Html
+view address roman =
+  div [class "wrapper"]
+  [ div [class "random-roman"]
+    [ div [class "name"]
+      [ span [property "innerHTML" (Json.Encode.string <| genderSymbol roman)] []
+      , span [] [ text (name roman) ]
+      ]
+    , div [class "button-container"] [ button [ onClick address () ] [ text "Roll a new random Roman!" ] ]
+    , div [class "about" ]
+      [ p []
+        [ text "Rolling Random Romans is a simple project built by "
+        , joelTwitterLink
+        , text " to play with Elm's random generation."
+        ]
+      , p []
+        [ text "A Roman is composed of a
+          random gender, social status, family, praenomen, cognomen, and
+          agnomen.  Some of these are independent while others are depend on
+          the value of a previous random roll."
+        ]
+      , p []
+        [ text "Check out the source on "
+        , gitHubLink
+        ]
+      ]
     ]
   , FamilyDetail.view(roman.family)
   ]
+
+joelTwitterLink : Html
+joelTwitterLink =
+  a [ href "https://twitter.com/joelquen"
+    , property "innerHTML" (Json.Encode.string "Jo&euml;l Quenneville")
+    ] []
+
+gitHubLink : Html
+gitHubLink =
+  a [ href "https://github.com/JoelQ/rolling-random-romans"] [ text "GitHub" ]
 
 genderSymbol : Roman -> String
 genderSymbol roman =

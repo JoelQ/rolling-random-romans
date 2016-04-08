@@ -10703,6 +10703,72 @@ Elm.Html.Attributes.make = function (_elm) {
                                         ,property: property
                                         ,attribute: attribute};
 };
+Elm.Html = Elm.Html || {};
+Elm.Html.Events = Elm.Html.Events || {};
+Elm.Html.Events.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Events = _elm.Html.Events || {};
+   if (_elm.Html.Events.values) return _elm.Html.Events.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var keyCode = A2($Json$Decode._op[":="],"keyCode",$Json$Decode.$int);
+   var targetChecked = A2($Json$Decode.at,_U.list(["target","checked"]),$Json$Decode.bool);
+   var targetValue = A2($Json$Decode.at,_U.list(["target","value"]),$Json$Decode.string);
+   var defaultOptions = $VirtualDom.defaultOptions;
+   var Options = F2(function (a,b) {    return {stopPropagation: a,preventDefault: b};});
+   var onWithOptions = $VirtualDom.onWithOptions;
+   var on = $VirtualDom.on;
+   var messageOn = F3(function (name,addr,msg) {    return A3(on,name,$Json$Decode.value,function (_p0) {    return A2($Signal.message,addr,msg);});});
+   var onClick = messageOn("click");
+   var onDoubleClick = messageOn("dblclick");
+   var onMouseMove = messageOn("mousemove");
+   var onMouseDown = messageOn("mousedown");
+   var onMouseUp = messageOn("mouseup");
+   var onMouseEnter = messageOn("mouseenter");
+   var onMouseLeave = messageOn("mouseleave");
+   var onMouseOver = messageOn("mouseover");
+   var onMouseOut = messageOn("mouseout");
+   var onBlur = messageOn("blur");
+   var onFocus = messageOn("focus");
+   var onSubmit = messageOn("submit");
+   var onKey = F3(function (name,addr,handler) {    return A3(on,name,keyCode,function (code) {    return A2($Signal.message,addr,handler(code));});});
+   var onKeyUp = onKey("keyup");
+   var onKeyDown = onKey("keydown");
+   var onKeyPress = onKey("keypress");
+   return _elm.Html.Events.values = {_op: _op
+                                    ,onBlur: onBlur
+                                    ,onFocus: onFocus
+                                    ,onSubmit: onSubmit
+                                    ,onKeyUp: onKeyUp
+                                    ,onKeyDown: onKeyDown
+                                    ,onKeyPress: onKeyPress
+                                    ,onClick: onClick
+                                    ,onDoubleClick: onDoubleClick
+                                    ,onMouseMove: onMouseMove
+                                    ,onMouseDown: onMouseDown
+                                    ,onMouseUp: onMouseUp
+                                    ,onMouseEnter: onMouseEnter
+                                    ,onMouseLeave: onMouseLeave
+                                    ,onMouseOver: onMouseOver
+                                    ,onMouseOut: onMouseOut
+                                    ,on: on
+                                    ,onWithOptions: onWithOptions
+                                    ,defaultOptions: defaultOptions
+                                    ,targetValue: targetValue
+                                    ,targetChecked: targetChecked
+                                    ,keyCode: keyCode
+                                    ,Options: Options};
+};
 Elm.Family = Elm.Family || {};
 Elm.Family.make = function (_elm) {
    "use strict";
@@ -10907,6 +10973,7 @@ Elm.Roman.make = function (_elm) {
    $FamilyDetail = Elm.FamilyDetail.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
    $Json$Encode = Elm.Json.Encode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -10915,6 +10982,10 @@ Elm.Roman.make = function (_elm) {
    $String = Elm.String.make(_elm);
    var _op = {};
    var genderSymbol = function (roman) {    var _p0 = roman.gender;if (_p0.ctor === "Female") {    return "&female;";} else {    return "&male;";}};
+   var gitHubLink = A2($Html.a,_U.list([$Html$Attributes.href("https://github.com/JoelQ/rolling-random-romans")]),_U.list([$Html.text("GitHub")]));
+   var joelTwitterLink = A2($Html.a,
+   _U.list([$Html$Attributes.href("https://twitter.com/joelquen"),A2($Html$Attributes.property,"innerHTML",$Json$Encode.string("Jo&euml;l Quenneville"))]),
+   _U.list([]));
    var genderedNomen = F2(function (gender,nomen) {
       var _p1 = gender;
       if (_p1.ctor === "Female") {
@@ -10930,19 +11001,46 @@ Elm.Roman.make = function (_elm) {
       var cognomen$ = A2($Maybe.withDefault,"",roman.cognomen);
       return A2($String.join," ",_U.list([praenomen$,nomen$,cognomen$,agnomen$]));
    };
-   var view = function (roman) {
+   var view = F2(function (address,roman) {
       return A2($Html.div,
-      _U.list([]),
+      _U.list([$Html$Attributes.$class("wrapper")]),
       _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.$class("name")]),
-              _U.list([A2($Html.span,_U.list([A2($Html$Attributes.property,"innerHTML",$Json$Encode.string(genderSymbol(roman)))]),_U.list([]))
-                      ,A2($Html.span,_U.list([]),_U.list([$Html.text(name(roman))]))]))
+              _U.list([$Html$Attributes.$class("random-roman")]),
+              _U.list([A2($Html.div,
+                      _U.list([$Html$Attributes.$class("name")]),
+                      _U.list([A2($Html.span,_U.list([A2($Html$Attributes.property,"innerHTML",$Json$Encode.string(genderSymbol(roman)))]),_U.list([]))
+                              ,A2($Html.span,_U.list([]),_U.list([$Html.text(name(roman))]))]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("button-container")]),
+                      _U.list([A2($Html.button,
+                      _U.list([A2($Html$Events.onClick,address,{ctor: "_Tuple0"})]),
+                      _U.list([$Html.text("Roll a new random Roman!")]))]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("about")]),
+                      _U.list([A2($Html.p,
+                              _U.list([]),
+                              _U.list([$Html.text("Rolling Random Romans is a simple project built by ")
+                                      ,joelTwitterLink
+                                      ,$Html.text(" to play with Elm\'s random generation.")]))
+                              ,A2($Html.p,
+                              _U.list([]),
+                              _U.list([$Html.text("A Roman is composed of a\n          random gender, social status, family, praenomen, cognomen, and\n          agnomen.  Some of these are independent while others are depend on\n          the value of a previous random roll.")]))
+                              ,A2($Html.p,_U.list([]),_U.list([$Html.text("Check out the source on "),gitHubLink]))]))]))
               ,$FamilyDetail.view(roman.family)]));
-   };
+   });
    var Roman = F5(function (a,b,c,d,e) {    return {gender: a,praenomen: b,family: c,cognomen: d,agnomen: e};});
    var Male = {ctor: "Male"};
    var Female = {ctor: "Female"};
-   return _elm.Roman.values = {_op: _op,Female: Female,Male: Male,Roman: Roman,name: name,genderedNomen: genderedNomen,view: view,genderSymbol: genderSymbol};
+   return _elm.Roman.values = {_op: _op
+                              ,Female: Female
+                              ,Male: Male
+                              ,Roman: Roman
+                              ,name: name
+                              ,genderedNomen: genderedNomen
+                              ,view: view
+                              ,joelTwitterLink: joelTwitterLink
+                              ,gitHubLink: gitHubLink
+                              ,genderSymbol: genderSymbol};
 };
 Elm.Random = Elm.Random || {};
 Elm.Random.Roman = Elm.Random.Roman || {};
@@ -11057,12 +11155,19 @@ Elm.Main.make = function (_elm) {
    $Roman = Elm.Roman.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var inbox = $Signal.mailbox({ctor: "_Tuple0"});
    var jsSeed = Elm.Native.Port.make(_elm).inbound("jsSeed",
    "Int",
    function (v) {
       return typeof v === "number" && isFinite(v) && Math.floor(v) === v ? v : _U.badPort("an integer",v);
    });
-   var randomRoman = $Basics.fst(A2($Random.generate,$Random$Roman.roman,$Random.initialSeed(jsSeed)));
-   var main = A2($Html.main$,_U.list([]),_U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Rolling Random Romans")])),$Roman.view(randomRoman)]));
-   return _elm.Main.values = {_op: _op,randomRoman: randomRoman,main: main};
+   var view = F2(function (address,roman) {
+      return A2($Html.main$,_U.list([]),_U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Rolling Random Romans")])),A2($Roman.view,address,roman)]));
+   });
+   var randomRoman = function (seed) {    return A2($Random.generate,$Random$Roman.roman,seed);};
+   var update = function (_p0) {    var _p1 = _p0;return randomRoman(_p1._1);};
+   var initialModel = randomRoman($Random.initialSeed(jsSeed));
+   var models = A3($Signal.foldp,F2(function (_p2,model) {    return update(model);}),initialModel,inbox.signal);
+   var main = A2($Signal.map,function (_p3) {    return A2(view,inbox.address,$Basics.fst(_p3));},models);
+   return _elm.Main.values = {_op: _op,initialModel: initialModel,update: update,randomRoman: randomRoman,view: view,inbox: inbox,models: models,main: main};
 };
