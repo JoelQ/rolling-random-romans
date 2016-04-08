@@ -12,15 +12,15 @@ Some of the random components are independent and some are dependent.
 There are a several independent and dependent variables involved in rolling a
 random Roman.
 
-* Gender - Independent variable
-* Social Status - Patrician/Plebian, independent variable.
-* Family - Historical family (or gens), depends on social status.
-* Praenomen - Personal name. Weighted towards historical family preference.
+* **Gender** - Independent variable
+* **Social** Status - Patrician/Plebian, independent variable.
+* **Family** - Historical family (or gens), depends on social status.
+* **Praenomen** - Personal name. Weighted towards historical family preference.
   Women don't have one.
-* Cognomen - Nickname, can be hereditary and denote a particular branch of a
+* **Cognomen** - Nickname, can be hereditary and denote a particular branch of a
   family. Depends on family. Random generic cognomen rolled if family has no
   associated cognomina. Women don't have one.
-* Agnomen - A second nickname or honorific. Only present if a cognomen is
+* **Agnomen** - A second nickname or honorific. Only present if a cognomen is
   present. Women don't have one.
 
 ![variable dependency graph](variable-dependency.png)
