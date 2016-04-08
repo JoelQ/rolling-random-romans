@@ -10478,6 +10478,72 @@ Elm.Html.make = function (_elm) {
                              ,menuitem: menuitem
                              ,menu: menu};
 };
+Elm.Html = Elm.Html || {};
+Elm.Html.Events = Elm.Html.Events || {};
+Elm.Html.Events.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Events = _elm.Html.Events || {};
+   if (_elm.Html.Events.values) return _elm.Html.Events.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var keyCode = A2($Json$Decode._op[":="],"keyCode",$Json$Decode.$int);
+   var targetChecked = A2($Json$Decode.at,_U.list(["target","checked"]),$Json$Decode.bool);
+   var targetValue = A2($Json$Decode.at,_U.list(["target","value"]),$Json$Decode.string);
+   var defaultOptions = $VirtualDom.defaultOptions;
+   var Options = F2(function (a,b) {    return {stopPropagation: a,preventDefault: b};});
+   var onWithOptions = $VirtualDom.onWithOptions;
+   var on = $VirtualDom.on;
+   var messageOn = F3(function (name,addr,msg) {    return A3(on,name,$Json$Decode.value,function (_p0) {    return A2($Signal.message,addr,msg);});});
+   var onClick = messageOn("click");
+   var onDoubleClick = messageOn("dblclick");
+   var onMouseMove = messageOn("mousemove");
+   var onMouseDown = messageOn("mousedown");
+   var onMouseUp = messageOn("mouseup");
+   var onMouseEnter = messageOn("mouseenter");
+   var onMouseLeave = messageOn("mouseleave");
+   var onMouseOver = messageOn("mouseover");
+   var onMouseOut = messageOn("mouseout");
+   var onBlur = messageOn("blur");
+   var onFocus = messageOn("focus");
+   var onSubmit = messageOn("submit");
+   var onKey = F3(function (name,addr,handler) {    return A3(on,name,keyCode,function (code) {    return A2($Signal.message,addr,handler(code));});});
+   var onKeyUp = onKey("keyup");
+   var onKeyDown = onKey("keydown");
+   var onKeyPress = onKey("keypress");
+   return _elm.Html.Events.values = {_op: _op
+                                    ,onBlur: onBlur
+                                    ,onFocus: onFocus
+                                    ,onSubmit: onSubmit
+                                    ,onKeyUp: onKeyUp
+                                    ,onKeyDown: onKeyDown
+                                    ,onKeyPress: onKeyPress
+                                    ,onClick: onClick
+                                    ,onDoubleClick: onDoubleClick
+                                    ,onMouseMove: onMouseMove
+                                    ,onMouseDown: onMouseDown
+                                    ,onMouseUp: onMouseUp
+                                    ,onMouseEnter: onMouseEnter
+                                    ,onMouseLeave: onMouseLeave
+                                    ,onMouseOver: onMouseOver
+                                    ,onMouseOut: onMouseOut
+                                    ,on: on
+                                    ,onWithOptions: onWithOptions
+                                    ,defaultOptions: defaultOptions
+                                    ,targetValue: targetValue
+                                    ,targetChecked: targetChecked
+                                    ,keyCode: keyCode
+                                    ,Options: Options};
+};
 Elm.Roman = Elm.Roman || {};
 Elm.Roman.make = function (_elm) {
    "use strict";
@@ -10547,6 +10613,7 @@ Elm.Main.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Random = Elm.Random.make(_elm),
@@ -10555,14 +10622,23 @@ Elm.Main.make = function (_elm) {
    $Roman = Elm.Roman.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var inbox = $Signal.mailbox({ctor: "_Tuple0"});
    var jsSeed = Elm.Native.Port.make(_elm).inbound("jsSeed",
    "Int",
    function (v) {
       return typeof v === "number" && isFinite(v) && Math.floor(v) === v ? v : _U.badPort("an integer",v);
    });
-   var randomRoman = $Basics.fst(A2($Random.generate,$Random$Roman.roman,$Random.initialSeed(jsSeed)));
-   var main = A2($Html.main$,
-   _U.list([]),
-   _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Rolling Random Romans")])),A2($Html.p,_U.list([]),_U.list([$Html.text($Roman.name(randomRoman))]))]));
-   return _elm.Main.values = {_op: _op,randomRoman: randomRoman,main: main};
+   var view = F2(function (address,_p0) {
+      var _p1 = _p0;
+      return A2($Html.main$,
+      _U.list([]),
+      _U.list([A2($Html.p,_U.list([]),_U.list([$Html.text($Roman.name(_p1._0))]))
+              ,A2($Html.button,_U.list([A2($Html$Events.onClick,address,{ctor: "_Tuple0"})]),_U.list([$Html.text("Roll another random Roman!")]))]));
+   });
+   var randomRoman = function (seed) {    return A2($Random.generate,$Random$Roman.roman,seed);};
+   var update = function (_p2) {    var _p3 = _p2;return randomRoman(_p3._1);};
+   var initialModel = randomRoman($Random.initialSeed(jsSeed));
+   var models = A3($Signal.foldp,F2(function (_p4,model) {    return update(model);}),initialModel,inbox.signal);
+   var main = A2($Signal.map,view(inbox.address),models);
+   return _elm.Main.values = {_op: _op,initialModel: initialModel,randomRoman: randomRoman,update: update,view: view,inbox: inbox,models: models,main: main};
 };
