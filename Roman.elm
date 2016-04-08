@@ -1,5 +1,5 @@
 module Roman where
-import Html exposing (Html, span, text, div, button, p, a)
+import Html exposing (Html, span, text, div, button, p, a, dl, dt, dd)
 import Html.Attributes exposing(property, class, href)
 import Html.Events exposing (onClick)
 import Json.Encode
@@ -45,23 +45,7 @@ view address roman =
       , span [] [ text (name roman) ]
       ]
     , div [class "button-container"] [ button [ onClick address () ] [ text "Roll a new random Roman!" ] ]
-    , div [class "about" ]
-      [ p []
-        [ text "Rolling Random Romans is a simple project built by "
-        , joelTwitterLink
-        , text " to play with Elm's random generation."
-        ]
-      , p []
-        [ text "A Roman is composed of a
-          random gender, social status, family, praenomen, cognomen, and
-          agnomen.  Some of these are independent while others are depend on
-          the value of a previous random roll."
-        ]
-      , p []
-        [ text "Check out the source on "
-        , gitHubLink
-        ]
-      ]
+    , div [class "about" ] [ summary , variableList , sourceCode ]
     ]
   , FamilyDetail.view(roman.family)
   ]
@@ -75,6 +59,44 @@ joelTwitterLink =
 gitHubLink : Html
 gitHubLink =
   a [ href "https://github.com/JoelQ/rolling-random-romans"] [ text "GitHub" ]
+
+summary : Html
+summary =
+  p []
+  [ text "Rolling Random Romans is a simple project built by "
+  , joelTwitterLink
+  , text " to play with Elm's random generation."
+  ]
+
+variableList : Html
+variableList =
+  p []
+  [ text "A Roman is composed of the following random attributes:"
+  , dl []
+    [ dt [] [ text "Gender" ]
+    , dd [] [ text "Independent variable" ]
+    , dt [] [ text "Social Status" ]
+    , dd [] [ text "Patrician or Plebian, independent variable" ]
+    , dt [] [ text "Family" ]
+    , dd [] [ text "Historical family, depends on social status" ]
+    , dt [] [ text "Praenomen" ]
+    , dd [] [ text "A personal name. Weighted towards family preference.
+      Women don't get one." ]
+    , dt [] [ text "Cognomen" ]
+    , dd [] [ text "A nickname, can be hereditary denoting a branch of a
+      family. Depends on family. Women don't get one." ]
+    , dt [] [ text "Agnomen" ]
+    , dd [] [ text "A second nickname or honorific. Only present if
+      cognomen is present. Women don't get one." ]
+    ]
+  ]
+
+sourceCode : Html
+sourceCode =
+  p []
+  [ text "Check out the source on "
+  , gitHubLink
+  ]
 
 genderSymbol : Roman -> String
 genderSymbol roman =

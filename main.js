@@ -10982,10 +10982,35 @@ Elm.Roman.make = function (_elm) {
    $String = Elm.String.make(_elm);
    var _op = {};
    var genderSymbol = function (roman) {    var _p0 = roman.gender;if (_p0.ctor === "Female") {    return "&female;";} else {    return "&male;";}};
+   var variableList = A2($Html.p,
+   _U.list([]),
+   _U.list([$Html.text("A Roman is composed of the following random attributes:")
+           ,A2($Html.dl,
+           _U.list([]),
+           _U.list([A2($Html.dt,_U.list([]),_U.list([$Html.text("Gender")]))
+                   ,A2($Html.dd,_U.list([]),_U.list([$Html.text("Independent variable")]))
+                   ,A2($Html.dt,_U.list([]),_U.list([$Html.text("Social Status")]))
+                   ,A2($Html.dd,_U.list([]),_U.list([$Html.text("Patrician or Plebian, independent variable")]))
+                   ,A2($Html.dt,_U.list([]),_U.list([$Html.text("Family")]))
+                   ,A2($Html.dd,_U.list([]),_U.list([$Html.text("Historical family, depends on social status")]))
+                   ,A2($Html.dt,_U.list([]),_U.list([$Html.text("Praenomen")]))
+                   ,A2($Html.dd,_U.list([]),_U.list([$Html.text("A personal name. Weighted towards family preference.\n      Women don\'t get one.")]))
+                   ,A2($Html.dt,_U.list([]),_U.list([$Html.text("Cognomen")]))
+                   ,A2($Html.dd,
+                   _U.list([]),
+                   _U.list([$Html.text("A nickname, can be hereditary denoting a branch of a\n      family. Depends on family. Women don\'t get one.")]))
+                   ,A2($Html.dt,_U.list([]),_U.list([$Html.text("Agnomen")]))
+                   ,A2($Html.dd,
+                   _U.list([]),
+                   _U.list([$Html.text("A second nickname or honorific. Only present if\n      cognomen is present. Women don\'t get one.")]))]))]));
    var gitHubLink = A2($Html.a,_U.list([$Html$Attributes.href("https://github.com/JoelQ/rolling-random-romans")]),_U.list([$Html.text("GitHub")]));
+   var sourceCode = A2($Html.p,_U.list([]),_U.list([$Html.text("Check out the source on "),gitHubLink]));
    var joelTwitterLink = A2($Html.a,
    _U.list([$Html$Attributes.href("https://twitter.com/joelquen"),A2($Html$Attributes.property,"innerHTML",$Json$Encode.string("Jo&euml;l Quenneville"))]),
    _U.list([]));
+   var summary = A2($Html.p,
+   _U.list([]),
+   _U.list([$Html.text("Rolling Random Romans is a simple project built by "),joelTwitterLink,$Html.text(" to play with Elm\'s random generation.")]));
    var genderedNomen = F2(function (gender,nomen) {
       var _p1 = gender;
       if (_p1.ctor === "Female") {
@@ -11015,17 +11040,7 @@ Elm.Roman.make = function (_elm) {
                       _U.list([A2($Html.button,
                       _U.list([A2($Html$Events.onClick,address,{ctor: "_Tuple0"})]),
                       _U.list([$Html.text("Roll a new random Roman!")]))]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("about")]),
-                      _U.list([A2($Html.p,
-                              _U.list([]),
-                              _U.list([$Html.text("Rolling Random Romans is a simple project built by ")
-                                      ,joelTwitterLink
-                                      ,$Html.text(" to play with Elm\'s random generation.")]))
-                              ,A2($Html.p,
-                              _U.list([]),
-                              _U.list([$Html.text("A Roman is composed of a\n          random gender, social status, family, praenomen, cognomen, and\n          agnomen.  Some of these are independent while others are depend on\n          the value of a previous random roll.")]))
-                              ,A2($Html.p,_U.list([]),_U.list([$Html.text("Check out the source on "),gitHubLink]))]))]))
+                      ,A2($Html.div,_U.list([$Html$Attributes.$class("about")]),_U.list([summary,variableList,sourceCode]))]))
               ,$FamilyDetail.view(roman.family)]));
    });
    var Roman = F5(function (a,b,c,d,e) {    return {gender: a,praenomen: b,family: c,cognomen: d,agnomen: e};});
@@ -11040,6 +11055,9 @@ Elm.Roman.make = function (_elm) {
                               ,view: view
                               ,joelTwitterLink: joelTwitterLink
                               ,gitHubLink: gitHubLink
+                              ,summary: summary
+                              ,variableList: variableList
+                              ,sourceCode: sourceCode
                               ,genderSymbol: genderSymbol};
 };
 Elm.Random = Elm.Random || {};
