@@ -1,44 +1,57 @@
+module Main exposing (..)
+
 import Html exposing (Html, main', h1, text)
+import Html.App
 import Random
 import Random.Roman as RandomR
-import Roman exposing(Roman)
+import Roman exposing (Roman, Msg(..))
 
-type alias Model = (Roman, Random.Seed)
+
+type alias Model =
+    Roman
+
 
 initialModel : Model
 initialModel =
-  randomRoman (Random.initialSeed jsSeed)
+    Roman.default
+
+
 
 -- UPDATE
 
-update : Model -> Model
-update (_, seed) =
-  randomRoman seed
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Generate ->
+            ( model, randomRoman )
+
+        Generated roman ->
+            ( roman, Cmd.none )
 
 
-randomRoman : Random.Seed -> Model
-randomRoman seed =
-  Random.generate RandomR.roman seed
+randomRoman : Cmd Msg
+randomRoman =
+    Random.generate Generated RandomR.roman
+
+
 
 -- VIEW
 
-view : Signal.Address () -> Roman -> Html
-view address roman =
-  main' []
-  [ h1 [] [ text "Rolling Random Romans" ]
-  , Roman.view address roman
-  ]
+
+view : Roman -> Html Msg
+view roman =
+    main' []
+        [ h1 [] [ text "Rolling Random Romans" ]
+        , Roman.view roman
+        ]
 
 
-port jsSeed : Int
-
-inbox : Signal.Mailbox ()
-inbox = Signal.mailbox ()
-
-models : Signal Model
-models =
-  Signal.foldp (\_ model -> update model) initialModel inbox.signal
-
-main : Signal Html
+main : Platform.Program Never
 main =
-  Signal.map (fst >> (view inbox.address)) models
+    Html.App.program
+        { init = ( initialModel, Cmd.none )
+        , view = view
+        , update = update
+        , subscriptions = (\m -> Sub.none)
+        }

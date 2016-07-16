@@ -1,32 +1,41 @@
-module Random.Family where
+module Random.Family exposing (..)
 
 import Random exposing (Generator, andThen)
 import Random.Extra as RandomE
-import Random.Odds exposing(rollOdds)
+import Random.Odds exposing (rollOdds)
+import Family
+    exposing
+        ( Family
+        , SocialStatus(..)
+        , defaultPlebianFamily
+        , defaultPatricianFamily
+        , plebianFamilies
+        , patricianFamilies
+        )
 
-import Family exposing
-  ( Family
-  , SocialStatus(..)
-  , defaultPlebianFamily
-  , defaultPatricianFamily
-  , plebianFamilies
-  , patricianFamilies
-  )
 
 socialStatus : Generator SocialStatus
 socialStatus =
-  rollOdds 70 Plebian Patrician
+    rollOdds 70 Plebian Patrician
+
 
 family : SocialStatus -> Generator Family
 family status =
-  case status of
-    Patrician -> patrician
-    Plebian -> plebian
+    case status of
+        Patrician ->
+            patrician
+
+        Plebian ->
+            plebian
+
 
 patrician : Generator Family
 patrician =
-  RandomE.selectWithDefault defaultPatricianFamily patricianFamilies
+    RandomE.sample patricianFamilies
+        |> Random.map (Maybe.withDefault defaultPatricianFamily)
+
 
 plebian : Generator Family
 plebian =
-  RandomE.selectWithDefault defaultPlebianFamily plebianFamilies
+    RandomE.sample plebianFamilies
+        |> Random.map (Maybe.withDefault defaultPlebianFamily)
